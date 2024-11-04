@@ -94,12 +94,11 @@ class Cube:
             total_difference += abs(magic_number - diagonal1)
             total_difference += abs(magic_number - diagonal2)
 
-        # for col in range(self.n):
-        #     diagonal1 = np.sum([self.cube[i, i, col] for i in range(self.n)])  # Diagonal dari kiri atas ke kanan bawah di setiap kolom (3D)
-        #     diagonal2 = np.sum([self.cube[i, self.n - i - 1, col] for i in range(self.n)])  # Diagonal dari kanan atas ke kiri bawah di setiap kolom (3D)
-        #     total_difference += abs(magic_number - diagonal1)
-        #     total_difference += abs(magic_number - diagonal2)
-
+        for col in range(self.n):
+            diagonal1 = np.sum([self.cube[i, i, col] for i in range(self.n)])  # Diagonal dari kiri atas ke kanan bawah di setiap kolom (3D)
+            diagonal2 = np.sum([self.cube[i, self.n - i - 1, col] for i in range(self.n)])  # Diagonal dari kanan atas ke kiri bawah di setiap kolom (3D)
+            total_difference += abs(magic_number - diagonal1)
+            total_difference += abs(magic_number - diagonal2)
 
         return total_difference
 
