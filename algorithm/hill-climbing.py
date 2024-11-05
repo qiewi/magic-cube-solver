@@ -40,8 +40,8 @@ def steepest_ascent_hill_climbing(cube, max_iterations):
                 next_state = neighbor
                 next_score = score
 
-        if next_state is None:
-            break  # Neighbor tidak lebih baik
+        if next_state is None:  # Berhenti jika tidak ada neighbor yang lebih baik
+            break
         else:
             current_state = next_state
             current_score = next_score
@@ -100,6 +100,42 @@ def sideways_move(cube, max_iterations=1000):
 
     return current_state, current_score, iterations, scores
 
+# Random Restart Hill-Climbing Optimized
+def random_restart_hill_climbing(max_restarts, max_iterations):
+    # Inisialisasi state awal untuk Random Restart Hill-Climbing
+    initial_cube_instance = Cube()  
+    print("Initial State:\n", initial_cube_instance.cube)
+    print("Initial Objective Value:", initial_cube_instance.objective_function())
+
+    best_state = None
+    best_score = float('inf')
+    scores = []
+
+    # Lakukan restart beberapa kali hingga mencapai max_restarts
+    for restart in range(max_restarts):
+        print(f"\nRestart {restart + 1}/{max_restarts}")
+        
+        # Generate new random starting cube for each restart
+        cube_instance = Cube()
+        current_state, current_score, _, current_scores = steepest_ascent_hill_climbing(cube_instance, max_iterations)
+        
+        # Extend the list of scores for analysis
+        scores.extend(current_scores)
+
+        # Update best score and state if the current score is better
+        if current_score < best_score:
+            best_state = current_state
+            best_score = current_score
+
+        print(f"End of Restart {restart + 1}: Best score = {best_score}")
+        
+        # Break if an optimal solution is found
+        if current_score == 0:
+            print("Optimal solution found!")
+            break
+
+    return best_state, best_score, len(scores), scores
+
 # Function untuk run experiment
 def run_experiment(algorithm_choice):
     results = {
@@ -111,30 +147,33 @@ def run_experiment(algorithm_choice):
         'duration': []
     }
 
-    cube_instance = Cube()  # Inisialisasi Cube
-    print("Initial State:\n", cube_instance.cube)
-
-    start_time = time.time()
-    
-    if algorithm_choice == "steepest":
-        final_state, final_value, iterations, scores = steepest_ascent_hill_climbing(cube_instance, max_iterations=100)
-    elif algorithm_choice == "sideways":
-        final_state, final_value, iterations, scores = sideways_move(cube_instance, max_iterations=100)
+    if algorithm_choice == "random_restart":
+        max_restarts = int(input("Enter maximum restarts: "))
+        max_iterations = int(input("Enter maximum iterations per restart: "))
+        start_time = time.time()
+        final_state, final_value, iterations, scores = random_restart_hill_climbing(max_restarts, max_iterations)
     else:
-        print("Invalid algorithm choice!")
-        return
+        cube_instance = Cube()
+        start_time = time.time()
+
+        if algorithm_choice == "steepest":
+            final_state, final_value, iterations, scores = steepest_ascent_hill_climbing(cube_instance, max_iterations=100)
+        elif algorithm_choice == "sideways":
+            final_state, final_value, iterations, scores = sideways_move(cube_instance, max_iterations=100)
+        else:
+            print("Invalid algorithm choice!")
+            return
 
     end_time = time.time()
 
-    results['initial_state'] = cube_instance.cube
+    results['initial_state'] = cube_instance.cube if algorithm_choice != "random_restart" else None
     results['final_state'] = final_state.cube
     results['final_value'] = final_value
     results['iterations'] = iterations
     results['duration'] = end_time - start_time
 
     # Plotting the objective function value against iterations
-    plt.plot(scores, label=algorithm_choice.capitalize() + " Move Algorithm")
-
+    plt.plot(scores, label=algorithm_choice.capitalize() + " Algorithm")
     plt.title("Objective Function vs Iterations")
     plt.xlabel("Iterations")
     plt.ylabel("Objective Function Value")
@@ -152,7 +191,7 @@ def run_experiment(algorithm_choice):
 
 # Main function untuk memilih algoritma
 def main():
-    algorithm_choice = input("Choose algorithm (steepest/sideways): ").strip().lower()
+    algorithm_choice = input("Choose algorithm (steepest/sideways/random_restart): ").strip().lower()
     run_experiment(algorithm_choice)
 
 # Run main function
