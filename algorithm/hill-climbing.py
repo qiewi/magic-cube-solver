@@ -140,30 +140,22 @@ def random_restart_hill_climbing(cube, max_restarts, max_iterations):
     # Mengembalikan hasil terbaik dan semua skor dari semua iterasi
     return best_state, best_score, len(scores_all), scores_all
 
-def stochastic_hill_climbing(cube, max_iterations=1000, initial_acceptance_chance=0.5, acceptance_decay=0.99, sample_size=10, min_noise=0.01, threshold=0.05):
+def stochastic_hill_climbing(cube, max_iterations=1000):
     current_state = cube
     current_score = current_state.objective_function()
     scores = []
-    acceptance_chance = initial_acceptance_chance
 
     for iteration in range(max_iterations):
-        scores.append(current_score + random.uniform(-min_noise, min_noise))  # Tambahkan noise ke dalam scores
+        scores.append(current_score)
 
-        # Pilih neighbor secara acak dan tambahkan noise untuk variasi lebih besar
-        neighbors = [random.choice(get_neighbors(current_state)) for _ in range(sample_size)]
-        neighbor_scores = [(n, n.objective_function() + random.uniform(-min_noise, min_noise)) for n in neighbors]
-        
-        # Ambil neighbor dengan score terbaik (minimal)
-        next_state, noisy_next_score = min(neighbor_scores, key=lambda item: item[1])
+        # Generate a single random neighbor
+        next_state = random.choice(get_neighbors(current_state))
         next_score = next_state.objective_function()
 
-        # Gunakan threshold untuk menerima perubahan kecil dalam score
-        if next_score < current_score or abs(next_score - current_score) < threshold or random.random() < acceptance_chance:
+        # Only accept the neighbor if it has a strictly lower score
+        if next_score < current_score:
             current_state = next_state
             current_score = next_score
-            acceptance_chance = initial_acceptance_chance  # Reset acceptance jika ada perbaikan
-        else:
-            acceptance_chance *= acceptance_decay  # Kurangi acceptance chance
 
     return current_state, current_score, max_iterations, scores
 
@@ -193,29 +185,18 @@ def run_experiment(algorithm_choice):
         final_state, final_value, iterations, scores = random_restart_hill_climbing(cube_instance, max_restarts, max_iterations)
         
     elif algorithm_choice == "steepest":
-        final_state, final_value, iterations, scores = steepest_ascent_hill_climbing(cube_instance, max_iterations=100)
+        final_state, final_value, iterations, scores = steepest_ascent_hill_climbing(cube_instance, max_sideways)
         
     elif algorithm_choice == "sideways":
-        final_state, final_value, iterations, scores = sideways_move(cube_instance, max_iterations=100)
+        max_sideways = int(input("Enter the maximum number of sideways iterations: "))
+        final_state, final_value, iterations, scores = sideways_move(cube_instance, max_sideways)
         
     elif algorithm_choice == "stochastic":
-        # Parameters for stochastic algorithm (you can modify these as needed)
         max_iterations = int(input("Enter maximum iterations for stochastic: "))
-        initial_acceptance_chance = 0.5
-        acceptance_decay = 0.99
-        sample_size = 10
-        force_exploration_step = 5
-        min_noise = 1e-3
-        
-        # Run stochastic hill climbing
         final_state, final_value, iterations, scores = stochastic_hill_climbing(
-    cube_instance,
-    max_iterations=max_iterations,
-    initial_acceptance_chance=initial_acceptance_chance,
-    acceptance_decay=acceptance_decay,
-    sample_size=sample_size,
-    min_noise=min_noise
-)
+            cube_instance,
+            max_iterations=max_iterations
+        )
         
     else:
         print("Invalid algorithm choice!")
