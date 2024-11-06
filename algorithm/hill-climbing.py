@@ -132,25 +132,28 @@ def random_restart_hill_climbing(cube, max_restarts, max_iterations):
 
     return best_state, best_score, len(scores), scores
 
-# Function untuk run experiment
 def run_experiment(algorithm_choice):
     results = {
         'algorithm': algorithm_choice,
         'initial_state': [],
         'final_state': [],
+        'initial_value': [],
         'final_value': [],
         'iterations': [],
         'duration': []
     }
 
+    # Generate initial cube instance
+    cube_instance = Cube()
+    results['initial_state'] = cube_instance.cube.copy()  # Menyimpan kondisi awal kubus
+    results['initial_value'] = cube_instance.objective_function()
+
     if algorithm_choice == "random_restart":
         max_restarts = int(input("Enter maximum restarts: "))
         max_iterations = int(input("Enter maximum iterations per restart: "))
-        cube_instance = Cube()
         start_time = time.time()
         final_state, final_value, iterations, scores = random_restart_hill_climbing(cube_instance, max_restarts, max_iterations)
     else:
-        cube_instance = Cube()
         start_time = time.time()
 
         if algorithm_choice == "steepest":
@@ -163,8 +166,6 @@ def run_experiment(algorithm_choice):
 
     end_time = time.time()
 
-    results['initial_state'] = cube_instance.cube if algorithm_choice != "random_restart" else None
-    results['initial_value'] = cube_instance.objective_function()
     results['final_state'] = final_state.cube
     results['final_value'] = final_value
     results['iterations'] = iterations
@@ -181,7 +182,7 @@ def run_experiment(algorithm_choice):
     # Display hasil experiment 
     print(f"Algorithm: {results['algorithm']}")
     print(f"Initial State:\n{results['initial_state']}")
-    print(f"Initial Objective Value:\n{results['initial_value']}")
+    print(f"Initial Objective Value: {results['initial_value']}")
     print(f"Final State:\n{results['final_state']}")
     print(f"Final Objective Value: {results['final_value']}")
     print(f"Iterations: {results['iterations']}")
