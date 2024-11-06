@@ -7,13 +7,24 @@ from algorithm.simulated_annealing import SimulatedAnnealing
 
 def run_algorithm(algorithm_choice):
     results = {
-        'algorithm': algorithm_choice,
+        'algorithm':
+        {   "1": "Steepest Ascent",
+            "2": "Sideways",
+            "3": "Random Restart",
+            "4": "Stochastic",
+            "5": "Simulated Annealing",
+            "6": "Genetic Algorithm"
+        }[algorithm_choice],
         'initial_state': [],
         'final_state': [],
         'initial_value': [],
         'final_value': [],
         'iterations': [],
-        'duration': []
+        'duration': [],
+        # Simulated Annealing
+        'stuck': [], 
+        # Genetic Algorithm
+        'population_size': [],
     }
 
     # Generate initial cube instance
@@ -48,6 +59,7 @@ def run_algorithm(algorithm_choice):
         results['final_value'] = final_value
         results['iterations'] = max_iterations
         results['duration'] = end_time - start_time
+        results['population_size'] = population_size
 
         # Plotting maximum and average scores
         plt.plot(min_scores, label="Max Objective Function")
@@ -80,6 +92,7 @@ def run_algorithm(algorithm_choice):
         results['final_value'] = best_objective
         results['iterations'] = len(objective_values)
         results['duration'] = end_time - start_time
+        results['stuck'] = stuck_counter
 
         # Plot objective function values and acceptance probabilities
         plt.figure(figsize=(12, 5))
@@ -144,9 +157,15 @@ def run_algorithm(algorithm_choice):
     # Display experiment results
     print(f"Algorithm: {results['algorithm']}")
     results['initial_state'].display_layered()
-    print(f"Initial Objective Value: {results['initial_value']}")
+    print(f"\nInitial Objective Value: {results['initial_value']}")
     results['final_state'].display_layered()
-    print(f"Final Objective Value: {results['final_value']}")
+    print(f"\nFinal Objective Value: {results['final_value']}")
+
+    if algorithm_choice == "5":
+        print(f"Stuck Counter: {results['stuck']}")
+    elif algorithm_choice == "6":
+        print(f"Population Size: {results['population_size']}")
+
     print(f"Iterations: {results['iterations']}")
     print(f"Duration: {results['duration']:.4f} seconds")
     print("-" * 40)

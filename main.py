@@ -7,7 +7,7 @@ def main():
     1. Steepest Ascent Hill Climbing
     2. Sideways Move
     3. Random Restart Hill Climbing
-    4. Random Restart Hill Climbing
+    4. Stochastic Hill Climbing
     5. Simulated Annealing
     6. Genetic Algorithm
     
