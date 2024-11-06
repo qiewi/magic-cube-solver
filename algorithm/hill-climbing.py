@@ -34,7 +34,7 @@ def get_neighbors(cube, current_score):
         i, j, k, x, y, z = best_swap
         cube.cube[i, j, k], cube.cube[x, y, z] = cube.cube[x, y, z], cube.cube[i, j, k]
 
-    return cube 
+    return cube
 
 # Steepest Ascent Hill-Climbing with optimizations
 def steepest_ascent_hill_climbing(cube, max_iterations):
@@ -54,7 +54,7 @@ def steepest_ascent_hill_climbing(cube, max_iterations):
             current_state = neighbor
             current_score = current_state.objective_function()
         
-        print(f"iterations: {iterations} - current score: {current_score}")
+        print(f"iterations: {iterations + 1} - current score: {current_score}")
         iterations += 1
 
     return current_state, current_score, iterations, scores
@@ -62,61 +62,42 @@ def steepest_ascent_hill_climbing(cube, max_iterations):
 def sideways_move(cube, max_sideways):
     current_state = cube
     current_score = current_state.objective_function()
-    scores = []
+    best_scores = []  # Stores only the best score from each iteration
     sideways_count = 0  # Counter for sideways moves
 
     while True:
-        scores.append(current_score)
+        best_scores.append(current_score)
 
-        # Get neighbors of the current state in each iteration
-        neighbors = get_neighbors(current_state)
-        next_state = None
-        next_score = current_score
-        found_better = False
+        # Get the best neighbor from the current state
+        neighbor = get_neighbors(current_state, current_score)
 
-        # Look for any neighbor with a better objective score
-        for neighbor in neighbors:
-            score = neighbor.objective_function()
-            if score < current_score:  # Found a better neighbor
-                next_state = neighbor
-                next_score = score
-                found_better = True
-                break  # Break immediately if a better neighbor is found
+        # Check if a better neighbor was found (get_neighbors returns only the best cube)
+        next_state = neighbor
+        next_score = next_state.objective_function()
 
-        # If no better neighbor, look for a sideways move (equal score)
-        if not found_better:
-            for neighbor in neighbors:
-                score = neighbor.objective_function()
-                if score == current_score:  # Consider this a sideways move
-                    # Ensure state actually changes for sideways move
-                    next_state = neighbor
-                    next_score = score
-                    break
-
-        # If no valid move is found, exit
-        if next_state is None:
-            print("No valid moves found, stopping.")
-            break
-        
-        # **Important**: If we made a move (even a sideways move), update state
-        if next_state != current_state:  # If the state is actually different
+        if next_score < current_score:
+            # Found a better neighbor
             current_state = next_state
             current_score = next_score
+            sideways_count = 0  # Reset sideways counter after finding improvement
         else:
-            print("Warning: No state change, something might be wrong.")
+            # If no better neighbor, check for sideways move (same score)
+            if next_score == current_score:
+                current_state = next_state
+                current_score = next_score
+                sideways_count += 1  # Increment sideways count for equal score move
+            else:
+                # No better or sideways move found, exit
+                break
 
-        # Reset or increment sideways counter based on whether it was a better move
-        if found_better:
-            sideways_count = 0  # Reset sideways count after finding improvement
-        else:
-            sideways_count += 1  # Increment sideways count only for sideways moves
+        print(f"Current score: {current_score}, Iterations: {len(best_scores)}")
 
-        # Stop if sideways moves reach the max allowed
+        # Stop if the sideways moves reach the max allowed
         if sideways_count >= max_sideways:
             print("Reached max sideways moves, stopping.")
             break
 
-    return current_state, current_score, len(scores), scores
+    return current_state, current_score, len(best_scores), best_scores
 
 def random_restart_hill_climbing(cube, max_restarts, max_iterations):
     best_state = None
@@ -181,7 +162,7 @@ def run_experiment(algorithm_choice):
 
     # Generate initial cube instance
     cube_instance = Cube()
-    results['initial_state'] = cube_instance.cube.copy()  # Menyimpan kondisi awal kubus
+    results['initial_state'] = cube_instance.cube.copy()  # Save initial cube state
     results['initial_value'] = cube_instance.objective_function()
 
     # Start timer
@@ -191,19 +172,19 @@ def run_experiment(algorithm_choice):
     if algorithm_choice == "random_restart":
         max_restarts = int(input("Enter maximum restarts: "))
         max_iterations = int(input("Enter maximum iterations per restart: "))
-        final_state, final_value, iterations, scores = random_restart_hill_climbing(cube_instance, max_restarts, max_iterations)
+        final_state, final_value, iterations, best_scores = random_restart_hill_climbing(cube_instance, max_restarts, max_iterations)
         
     elif algorithm_choice == "steepest":
         max_iterations = int(input("Enter maximum iterations per restart: "))
-        final_state, final_value, iterations, scores = steepest_ascent_hill_climbing(cube_instance, max_iterations)
+        final_state, final_value, iterations, best_scores = steepest_ascent_hill_climbing(cube_instance, max_iterations)
         
     elif algorithm_choice == "sideways":
         max_sideways = int(input("Enter the maximum number of sideways iterations: "))
-        final_state, final_value, iterations, scores = sideways_move(cube_instance, max_sideways)
+        final_state, final_value, iterations, best_scores = sideways_move(cube_instance, max_sideways)
         
     elif algorithm_choice == "stochastic":
         max_iterations = int(input("Enter maximum iterations for stochastic: "))
-        final_state, final_value, iterations, scores = stochastic_hill_climbing(
+        final_state, final_value, iterations, best_scores = stochastic_hill_climbing(
             cube_instance,
             max_iterations=max_iterations
         )
@@ -221,8 +202,8 @@ def run_experiment(algorithm_choice):
     results['iterations'] = iterations
     results['duration'] = end_time - start_time
 
-    # Plotting the objective function value against iterations
-    plt.plot(scores, label=algorithm_choice.capitalize() + " Algorithm")
+    # Plotting only the best score for each iteration
+    plt.plot(best_scores, label=algorithm_choice.capitalize() + " Algorithm")
     plt.title("Objective Function vs Iterations")
     plt.xlabel("Iterations")
     plt.ylabel("Objective Function Value")
