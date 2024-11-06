@@ -10,6 +10,7 @@ class Cube:
         numbers = list(range(1, self.n ** 3 + 1))
         random.shuffle(numbers)
         self.cube = np.array([[[numbers.pop() for _ in range(self.n)] for _ in range(self.n)] for _ in range(self.n)])
+
         # self.cube = np.array([
         #     [
         #         [78, 109, 15, 41, 72],
@@ -94,26 +95,26 @@ class Cube:
             total_difference += abs(magic_number - diagonal1)
             total_difference += abs(magic_number - diagonal2)
 
-        # for col in range(self.n):
-        #     diagonal1 = np.sum([self.cube[i, i, col] for i in range(self.n)])  # Diagonal dari kiri atas ke kanan bawah di setiap kolom (3D)
-        #     diagonal2 = np.sum([self.cube[i, self.n - i - 1, col] for i in range(self.n)])  # Diagonal dari kanan atas ke kiri bawah di setiap kolom (3D)
-        #     total_difference += abs(magic_number - diagonal1)
-        #     total_difference += abs(magic_number - diagonal2)
-
+        for col in range(self.n):
+            diagonal1 = np.sum([self.cube[i, i, col] for i in range(self.n)])  # Diagonal dari kiri atas ke kanan bawah di setiap kolom (3D)
+            diagonal2 = np.sum([self.cube[i, self.n - i - 1, col] for i in range(self.n)])  # Diagonal dari kanan atas ke kiri bawah di setiap kolom (3D)
+            total_difference += abs(magic_number - diagonal1)
+            total_difference += abs(magic_number - diagonal2)
 
         return total_difference
 
+    def display_layered(self):
+        for layer in range(self.n):
+            print(f"\nLayer {layer + 1}:\n")
+            for row in range(self.n):
+                print(" " * (8 + 15 - (3*row)), end="") 
+                for col in range(self.n):
+                    print(f"{self.cube[layer][row][col]:>4}", end="   ")  
+                print("")  
+    
 
+# cube_instance = Cube()
+# objective_value = cube_instance.objective_function()
 
-cube_instance = Cube()
-objective_value = cube_instance.objective_function()
-
-def display_cube(cube):
-    for i, layer in enumerate(cube):
-        print(f"Layer {i + 1}:\n")
-        for row in layer:
-            print(" ".join(f"{num:3}" for num in row))
-        print("\n" + "-" * 20 + "\n") 
-
-display_cube(cube_instance.cube)
-print("Nilai fungsi objektif:", objective_value)
+# cube_instance.display_layered()
+# print("\n\nNilai fungsi objektif:", objective_value)
