@@ -93,13 +93,13 @@ class GeneticAlgorithm:
                 self.best_cube = population[objective_values.index(self.best_value)]
 
         # Return the best cube and its objective value
-        return self.best_cube, self.best_value
+        return self.best_cube, self.best_value, population
 
       
-if __name__ == "__main__":
-    search = GeneticAlgorithm()
-    cube_instance, objective_value = search.genetic_search(10, 100)
+# if __name__ == "__main__":
+#     search = GeneticAlgorithm()
+#     cube_instance, objective_value = search.genetic_search(10, 100)
 
-    cube_instance.display_cube()
-    print("Nilai fungsi objektif:", objective_value)
+#     cube_instance.display_cube()
+#     print("Nilai fungsi objektif:", objective_value)
         
