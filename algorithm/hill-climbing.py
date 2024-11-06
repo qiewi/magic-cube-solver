@@ -138,14 +138,28 @@ def stochastic_hill_climbing(cube, max_iterations=1000):
     for iteration in range(max_iterations):
         scores.append(current_score)
 
-        # Generate a single random neighbor
-        next_state = random.choice(get_neighbors(current_state))
+        # Generate neighbors (assuming get_neighbors returns a list of Cube objects)
+        neighbors = get_neighbors(current_state, current_score)
+
+        # Ensure neighbors is a list (if get_neighbors returns a single Cube)
+        if isinstance(neighbors, Cube):  # If it's a single Cube, put it in a list
+            neighbors = [neighbors]
+
+        # If there are no neighbors, stop the algorithm
+        if not neighbors:
+            break
+
+        # Randomly select a neighbor
+        next_state = random.choice(neighbors)
         next_score = next_state.objective_function()
 
-        # Only accept the neighbor if it has a strictly lower score
+        # Accept the neighbor only if it improves the objective value (lower score)
         if next_score < current_score:
             current_state = next_state
             current_score = next_score
+            print(f"Iteration {iteration + 1}: Improved to score {current_score}")
+        else:
+            print(f"Iteration {iteration + 1}: No improvement, current score is {current_score}")
 
     return current_state, current_score, max_iterations, scores
 
