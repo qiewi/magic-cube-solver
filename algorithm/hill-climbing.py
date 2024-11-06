@@ -100,12 +100,9 @@ def sideways_move(cube, max_iterations=1000):
 
     return current_state, current_score, iterations, scores
 
-# Random Restart Hill-Climbing Optimized
-def random_restart_hill_climbing(max_restarts, max_iterations):
-    # Inisialisasi state awal untuk Random Restart Hill-Climbing
-    initial_cube_instance = Cube()  
-    print("Initial State:\n", initial_cube_instance.cube)
-    print("Initial Objective Value:", initial_cube_instance.objective_function())
+def random_restart_hill_climbing(cube, max_restarts, max_iterations):
+    current_state = cube
+    current_score = current_state.objective_function()
 
     best_state = None
     best_score = float('inf')
@@ -115,21 +112,20 @@ def random_restart_hill_climbing(max_restarts, max_iterations):
     for restart in range(max_restarts):
         print(f"\nRestart {restart + 1}/{max_restarts}")
         
-        # Generate new random starting cube for each restart
+        # Menghasilkan instance cube baru dari cube awal untuk setiap restart
         cube_instance = Cube()
         current_state, current_score, _, current_scores = steepest_ascent_hill_climbing(cube_instance, max_iterations)
-        
-        # Extend the list of scores for analysis
+
         scores.extend(current_scores)
 
-        # Update best score and state if the current score is better
+        # Cek jika neighbor lebih baik dari current
         if current_score < best_score:
             best_state = current_state
             best_score = current_score
 
         print(f"End of Restart {restart + 1}: Best score = {best_score}")
         
-        # Break if an optimal solution is found
+        # Berhenti jika ditemukan solusi optimal (skor 0)
         if current_score == 0:
             print("Optimal solution found!")
             break
@@ -150,8 +146,9 @@ def run_experiment(algorithm_choice):
     if algorithm_choice == "random_restart":
         max_restarts = int(input("Enter maximum restarts: "))
         max_iterations = int(input("Enter maximum iterations per restart: "))
+        cube_instance = Cube()
         start_time = time.time()
-        final_state, final_value, iterations, scores = random_restart_hill_climbing(max_restarts, max_iterations)
+        final_state, final_value, iterations, scores = random_restart_hill_climbing(cube_instance, max_restarts, max_iterations)
     else:
         cube_instance = Cube()
         start_time = time.time()
@@ -167,6 +164,7 @@ def run_experiment(algorithm_choice):
     end_time = time.time()
 
     results['initial_state'] = cube_instance.cube if algorithm_choice != "random_restart" else None
+    results['initial_value'] = cube_instance.objective_function()
     results['final_state'] = final_state.cube
     results['final_value'] = final_value
     results['iterations'] = iterations
@@ -183,6 +181,7 @@ def run_experiment(algorithm_choice):
     # Display hasil experiment 
     print(f"Algorithm: {results['algorithm']}")
     print(f"Initial State:\n{results['initial_state']}")
+    print(f"Initial Objective Value:\n{results['initial_value']}")
     print(f"Final State:\n{results['final_state']}")
     print(f"Final Objective Value: {results['final_value']}")
     print(f"Iterations: {results['iterations']}")

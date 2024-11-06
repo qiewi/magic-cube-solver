@@ -108,12 +108,12 @@ class Cube:
 cube_instance = Cube()
 objective_value = cube_instance.objective_function()
 
-def display_cube(cube):
-    for i, layer in enumerate(cube):
-        print(f"Layer {i + 1}:\n")
-        for row in layer:
-            print(" ".join(f"{num:3}" for num in row))
-        print("\n" + "-" * 20 + "\n") 
+# def display_cube(cube):
+#     for i, layer in enumerate(cube):
+#         print(f"Layer {i + 1}:\n")
+#         for row in layer:
+#             print(" ".join(f"{num:3}" for num in row))
+#         print("\n" + "-" * 20 + "\n") 
 
-display_cube(cube_instance.cube)
-print("Nilai fungsi objektif:", objective_value)
+# display_cube(cube_instance.cube)
+# print("Nilai fungsi objektif:", objective_value)
