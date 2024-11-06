@@ -11,7 +11,9 @@ class SimulatedAnnealing():
 
     # Set the best state found
     def set_state(self, cube, objective_value):
-        self.best_cube = cube
+        cubeInstance = Cube()
+        cubeInstance.cube = cube
+        self.best_cube = cubeInstance
         self.best_value = objective_value
     
     # Generate a neighbor by swapping two numbers
@@ -62,7 +64,7 @@ class SimulatedAnnealing():
             acceptance_probability = math.exp(-delta_E / T) if delta_E > 0 else 1
 
             # Decide whether to accept the neighbor
-            if delta_E < 0 or random.uniform(0, 1) < acceptance_probability:
+            if random.uniform(0, 1) < acceptance_probability:
                 current_state = neighbor_state
                 current_objective = neighbor_objective
 
@@ -81,13 +83,14 @@ class SimulatedAnnealing():
             # Check if the algorithm is stuck in a local optimum
             if delta_E == 0:
                 unchanged_iterations += 1
-                if unchanged_iterations >= 100:
-                    stuck_counter += 1
-                    unchanged_iterations = 0
+                stuck_counter += 1
+        
             else:
                 unchanged_iterations = 0
 
             # Update the temperature
             T *= cooling_rate
+
+            print(f"iterations: {iteration + 1} - current score: {current_objective}")
 
         return self.best_cube, self.best_value, objective_values, acceptance_probabilities, stuck_counter

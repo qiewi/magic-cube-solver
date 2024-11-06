@@ -1,11 +1,11 @@
 import time
 import matplotlib.pyplot as plt
 from models.cube import Cube
-from algorithm.hill_climbing import steepest_ascent_hill_climbing, sideways_move, random_restart_hill_climbing, stochastic_hill_climbing
+from algorithm.hill_climbing import HillClimbing
 from algorithm.genetic_algorithm import GeneticAlgorithm
 from algorithm.simulated_annealing import SimulatedAnnealing
 
-def run_experiment(algorithm_choice):
+def run_algorithm(algorithm_choice):
     results = {
         'algorithm': algorithm_choice,
         'initial_state': [],
@@ -18,13 +18,14 @@ def run_experiment(algorithm_choice):
 
     # Generate initial cube instance
     cube_instance = Cube()
-    results['initial_state'] = cube_instance.cube.copy()  # Save initial cube state
+    
+    results['initial_state'] = cube_instance  # Save initial cube state
     results['initial_value'] = cube_instance.objective_function()
 
     # Start timer
     start_time = time.time()
 
-    if algorithm_choice == "genetic":
+    if algorithm_choice == "6":
         population_size = int(input("Enter population size: "))
         max_iterations = int(input("Enter maximum iterations: "))
         
@@ -43,7 +44,7 @@ def run_experiment(algorithm_choice):
         # End timer
         end_time = time.time()
         
-        results['final_state'] = final_state.cube if hasattr(final_state, 'cube') else final_state
+        results['final_state'] = final_state
         results['final_value'] = final_value
         results['iterations'] = max_iterations
         results['duration'] = end_time - start_time
@@ -57,7 +58,7 @@ def run_experiment(algorithm_choice):
         plt.legend()
         plt.show()
 
-    elif algorithm_choice == "simulated_annealing":
+    elif algorithm_choice == "5":
         initial_temperature = float(input("Enter initial temperature: "))
         cooling_rate = float(input("Enter cooling rate (0 < cooling rate < 1): "))
         min_temperature = float(input("Enter minimum temperature: "))
@@ -75,7 +76,7 @@ def run_experiment(algorithm_choice):
         )
         
         end_time = time.time()
-        results['final_state'] = best_state.cube if hasattr(best_state, 'cube') else best_state
+        results['final_state'] = best_state
         results['final_value'] = best_objective
         results['iterations'] = len(objective_values)
         results['duration'] = end_time - start_time
@@ -100,23 +101,25 @@ def run_experiment(algorithm_choice):
         plt.show()
 
     else:
+        search = HillClimbing()
+
         # Handling for hill climbing algorithms
-        if algorithm_choice == "random_restart":
+        if algorithm_choice == "3":
             max_restarts = int(input("Enter maximum restarts: "))
             max_iterations = int(input("Enter maximum iterations per restart: "))
-            final_state, final_value, iterations, best_scores = random_restart_hill_climbing(cube_instance, max_restarts, max_iterations)
+            final_state, final_value, iterations, best_scores = search.random_restart(cube_instance, max_restarts, max_iterations)
         
-        elif algorithm_choice == "steepest":
+        elif algorithm_choice == "1":
             max_iterations = int(input("Enter maximum iterations: "))
-            final_state, final_value, iterations, best_scores = steepest_ascent_hill_climbing(cube_instance, max_iterations)
+            final_state, final_value, iterations, best_scores = search.steepest_ascent(cube_instance, max_iterations)
         
-        elif algorithm_choice == "sideways":
+        elif algorithm_choice == "2":
             max_sideways = int(input("Enter the maximum number of sideways iterations: "))
-            final_state, final_value, iterations, best_scores = sideways_move(cube_instance, max_sideways)
+            final_state, final_value, iterations, best_scores = search.sideways_move(cube_instance, max_sideways)
         
-        elif algorithm_choice == "stochastic":
+        elif algorithm_choice == "4":
             max_iterations = int(input("Enter maximum iterations: "))
-            final_state, final_value, iterations, best_scores = stochastic_hill_climbing(
+            final_state, final_value, iterations, best_scores = search.stochastic(
                 cube_instance,
                 max_iterations=max_iterations
             )
@@ -125,7 +128,7 @@ def run_experiment(algorithm_choice):
             return
 
         end_time = time.time()
-        results['final_state'] = final_state.cube if hasattr(final_state, 'cube') else final_state
+        results['final_state'] = final_state
         results['final_value'] = final_value
         results['iterations'] = iterations
         results['duration'] = end_time - start_time
@@ -140,9 +143,9 @@ def run_experiment(algorithm_choice):
 
     # Display experiment results
     print(f"Algorithm: {results['algorithm']}")
-    print(f"Initial State:\n{results['initial_state']}")
+    results['initial_state'].display_layered()
     print(f"Initial Objective Value: {results['initial_value']}")
-    print(f"Final State:\n{results['final_state']}")
+    results['final_state'].display_layered()
     print(f"Final Objective Value: {results['final_value']}")
     print(f"Iterations: {results['iterations']}")
     print(f"Duration: {results['duration']:.4f} seconds")

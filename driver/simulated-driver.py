@@ -1,7 +1,7 @@
 import numpy as np
 import time
 import matplotlib.pyplot as plt
-from algorithm.sim import SimulatedAnnealing
+from algorithm.simulated_annealing import SimulatedAnnealing
 from models.cube import Cube
 
 def simulatedAnnealingDriver(initial_temperature=1000, cooling_rate=0.99, min_temperature=0.1, max_iterations=10000):
