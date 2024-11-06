@@ -101,12 +101,9 @@ def sideways_move(cube, max_iterations=1000):
     return current_state, current_score, iterations, scores
 
 def random_restart_hill_climbing(cube, max_restarts, max_iterations):
-    current_state = cube
-    current_score = current_state.objective_function()
-
     best_state = None
     best_score = float('inf')
-    scores = []
+    scores_all = []  # Untuk menyimpan skor dari semua iterasi dalam semua restart
 
     # Lakukan restart beberapa kali hingga mencapai max_restarts
     for restart in range(max_restarts):
@@ -116,9 +113,10 @@ def random_restart_hill_climbing(cube, max_restarts, max_iterations):
         cube_instance = Cube()
         current_state, current_score, _, current_scores = steepest_ascent_hill_climbing(cube_instance, max_iterations)
 
-        scores.extend(current_scores)
+        # Menyimpan semua scores dari iterasi ini ke dalam scores_all
+        scores_all.extend(current_scores)
 
-        # Cek jika neighbor lebih baik dari current
+        # Cek jika skor dari iterasi ini lebih baik dari best_score
         if current_score < best_score:
             best_state = current_state
             best_score = current_score
@@ -130,8 +128,10 @@ def random_restart_hill_climbing(cube, max_restarts, max_iterations):
             print("Optimal solution found!")
             break
 
-    return best_state, best_score, len(scores), scores
+    # Mengembalikan hasil terbaik dan semua skor dari semua iterasi
+    return best_state, best_score, len(scores_all), scores_all
 
+# Fungsi menjalankan eksperimen
 def run_experiment(algorithm_choice):
     results = {
         'algorithm': algorithm_choice,
@@ -145,7 +145,7 @@ def run_experiment(algorithm_choice):
 
     # Generate initial cube instance
     cube_instance = Cube()
-    results['initial_state'] = cube_instance.cube.copy()  # Menyimpan kondisi awal kubus
+    results['initial_state'] = cube_instance.cube.copy()
     results['initial_value'] = cube_instance.objective_function()
 
     if algorithm_choice == "random_restart":
@@ -155,37 +155,39 @@ def run_experiment(algorithm_choice):
         final_state, final_value, iterations, scores = random_restart_hill_climbing(cube_instance, max_restarts, max_iterations)
     else:
         start_time = time.time()
+        max_iterations = 100
 
         if algorithm_choice == "steepest":
-            final_state, final_value, iterations, scores = steepest_ascent_hill_climbing(cube_instance, max_iterations=100)
+            final_state, final_value, iterations, scores = steepest_ascent_hill_climbing(cube_instance, max_iterations)
         elif algorithm_choice == "sideways":
-            final_state, final_value, iterations, scores = sideways_move(cube_instance, max_iterations=100)
+            final_state, final_value, iterations, scores = sideways_move(cube_instance, max_iterations)
         else:
             print("Invalid algorithm choice!")
             return
 
     end_time = time.time()
 
+    # Update hasil experiment
     results['final_state'] = final_state.cube
     results['final_value'] = final_value
     results['iterations'] = iterations
     results['duration'] = end_time - start_time
 
-    # Plotting the objective function value against iterations
+    # Plotting seluruh nilai objective function terhadap iterasi
     plt.plot(scores, label=algorithm_choice.capitalize() + " Algorithm")
-    plt.title("Objective Function vs Iterations")
+    plt.title("Objective Function vs Iterations (All Restarts)")
     plt.xlabel("Iterations")
     plt.ylabel("Objective Function Value")
     plt.legend()
     plt.show()
 
-    # Display hasil experiment 
+    # Display hasil experiment
     print(f"Algorithm: {results['algorithm']}")
     print(f"Initial State:\n{results['initial_state']}")
     print(f"Initial Objective Value: {results['initial_value']}")
     print(f"Final State:\n{results['final_state']}")
     print(f"Final Objective Value: {results['final_value']}")
-    print(f"Iterations: {results['iterations']}")
+    print(f"Total Iterations: {results['iterations']}")
     print(f"Duration: {results['duration']:.4f} seconds")
     print("-" * 40)
 
