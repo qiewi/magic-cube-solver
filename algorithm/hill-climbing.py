@@ -50,55 +50,64 @@ def steepest_ascent_hill_climbing(cube, max_iterations):
 
     return current_state, current_score, iterations, scores
 
-# Sideways Move Algorithm
-def sideways_move(cube, max_iterations=1000):
+def sideways_move(cube, max_sideways):
     current_state = cube
     current_score = current_state.objective_function()
-    iterations = 0
     scores = []
-    no_improvement_count = 0  # Counter untuk iterations yang tidak ada improvement
+    sideways_count = 0  # Counter for sideways moves
 
-    while iterations < max_iterations:  
+    while True:
         scores.append(current_score)
+
+        # Get neighbors of the current state in each iteration
         neighbors = get_neighbors(current_state)
         next_state = None
         next_score = current_score
         found_better = False
 
+        # Look for any neighbor with a better objective score
         for neighbor in neighbors:
             score = neighbor.objective_function()
-            if score < next_score:  # Neighbor lebih baik dari current
+            if score < current_score:  # Found a better neighbor
                 next_state = neighbor
                 next_score = score
                 found_better = True
-                break  # Exit loop ketika neighbor lebih baik
+                break  # Break immediately if a better neighbor is found
 
-        if not found_better:  # Jika tidak ada neighbor yang lebih baik
+        # If no better neighbor, look for a sideways move (equal score)
+        if not found_better:
             for neighbor in neighbors:
                 score = neighbor.objective_function()
-                if score == next_score:  # Ketika neighbor sama dengan current
+                if score == current_score:  # Consider this a sideways move
+                    # Ensure state actually changes for sideways move
                     next_state = neighbor
+                    next_score = score
                     break
 
+        # If no valid move is found, exit
         if next_state is None:
             print("No valid moves found, stopping.")
-            break  # Ketika neighbor tidak lebih baik dari current
-        else:
+            break
+        
+        # **Important**: If we made a move (even a sideways move), update state
+        if next_state != current_state:  # If the state is actually different
             current_state = next_state
             current_score = next_score
-            iterations += 1  
+        else:
+            print("Warning: No state change, something might be wrong.")
 
-            if found_better:
-                no_improvement_count = 0  # Reset jika iterasinya improve
-            else:
-                no_improvement_count += 1  # Counter bertambah jika iterasi tidak improve
+        # Reset or increment sideways counter based on whether it was a better move
+        if found_better:
+            sideways_count = 0  # Reset sideways count after finding improvement
+        else:
+            sideways_count += 1  # Increment sideways count only for sideways moves
 
-            # Check jika terlalu banyak iterasi tanpa improvement
-            if no_improvement_count > 20:  # Jika tidak ada improvement selama 20 iterasi
-                print("No improvement for 20 iterations, stopping.")
-                break
+        # Stop if sideways moves reach the max allowed
+        if sideways_count >= max_sideways:
+            print("Reached max sideways moves, stopping.")
+            break
 
-    return current_state, current_score, iterations, scores
+    return current_state, current_score, len(scores), scores
 
 def random_restart_hill_climbing(cube, max_restarts, max_iterations):
     best_state = None
@@ -131,7 +140,6 @@ def random_restart_hill_climbing(cube, max_restarts, max_iterations):
     # Mengembalikan hasil terbaik dan semua skor dari semua iterasi
     return best_state, best_score, len(scores_all), scores_all
 
-# Fungsi menjalankan eksperimen
 def run_experiment(algorithm_choice):
     results = {
         'algorithm': algorithm_choice,
@@ -153,35 +161,40 @@ def run_experiment(algorithm_choice):
         max_iterations = int(input("Enter maximum iterations per restart: "))
         start_time = time.time()
         final_state, final_value, iterations, scores = random_restart_hill_climbing(cube_instance, max_restarts, max_iterations)
+    
     else:
         start_time = time.time()
         max_iterations = 100
 
         if algorithm_choice == "steepest":
             final_state, final_value, iterations, scores = steepest_ascent_hill_climbing(cube_instance, max_iterations)
+        
         elif algorithm_choice == "sideways":
-            final_state, final_value, iterations, scores = sideways_move(cube_instance, max_iterations)
+            # Ensure max_sideways is converted to an integer
+            max_sideways = int(input("Enter the maximum number of sideways iterations: "))
+            final_state, final_value, iterations, scores = sideways_move(cube_instance, max_sideways)
+            
         else:
             print("Invalid algorithm choice!")
             return
 
     end_time = time.time()
 
-    # Update hasil experiment
+    # Update results with experiment outcomes
     results['final_state'] = final_state.cube
     results['final_value'] = final_value
     results['iterations'] = iterations
     results['duration'] = end_time - start_time
 
-    # Plotting seluruh nilai objective function terhadap iterasi
+    # Plot the objective function values over iterations
     plt.plot(scores, label=algorithm_choice.capitalize() + " Algorithm")
-    plt.title("Objective Function vs Iterations (All Restarts)")
+    plt.title("Objective Function vs Iterations")
     plt.xlabel("Iterations")
     plt.ylabel("Objective Function Value")
     plt.legend()
     plt.show()
 
-    # Display hasil experiment
+    # Display experiment results
     print(f"Algorithm: {results['algorithm']}")
     print(f"Initial State:\n{results['initial_state']}")
     print(f"Initial Objective Value: {results['initial_value']}")
