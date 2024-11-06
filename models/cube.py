@@ -103,17 +103,18 @@ class Cube:
 
         return total_difference
 
-    def display_cube(self):
-        for i, layer in enumerate(self.cube):
-            print(f"Layer {i + 1}:\n")
-            for row in layer:
-                print(" ".join(f"{num:3}" for num in row))
-            print("\n" + "-" * 20 + "\n") 
-
-
+    def display_layered(self):
+        for layer in range(self.n):
+            print(f"\nLayer {layer + 1}:\n")
+            for row in range(self.n):
+                print(" " * (8 + 15 - (3*row)), end="") 
+                for col in range(self.n):
+                    print(f"{self.cube[layer][row][col]:>4}", end="   ")  
+                print("")  
+    
 
 # cube_instance = Cube()
 # objective_value = cube_instance.objective_function()
 
-# cube_instance.display_cube()
-# print("Nilai fungsi objektif:", objective_value)
+# cube_instance.display_layered()
+# print("\n\nNilai fungsi objektif:", objective_value)
