@@ -10,6 +10,7 @@ class Cube:
         numbers = list(range(1, self.n ** 3 + 1))
         random.shuffle(numbers)
         self.cube = np.array([[[numbers.pop() for _ in range(self.n)] for _ in range(self.n)] for _ in range(self.n)])
+
         # self.cube = np.array([
         #     [
         #         [78, 109, 15, 41, 72],
@@ -102,17 +103,17 @@ class Cube:
 
         return total_difference
 
+    def display_cube(self):
+        for i, layer in enumerate(self.cube):
+            print(f"Layer {i + 1}:\n")
+            for row in layer:
+                print(" ".join(f"{num:3}" for num in row))
+            print("\n" + "-" * 20 + "\n") 
 
 
-cube_instance = Cube()
-objective_value = cube_instance.objective_function()
 
-def display_cube(cube):
-    for i, layer in enumerate(cube):
-        print(f"Layer {i + 1}:\n")
-        for row in layer:
-            print(" ".join(f"{num:3}" for num in row))
-        print("\n" + "-" * 20 + "\n") 
+# cube_instance = Cube()
+# objective_value = cube_instance.objective_function()
 
-display_cube(cube_instance.cube)
-print("Nilai fungsi objektif:", objective_value)
+# cube_instance.display_cube()
+# print("Nilai fungsi objektif:", objective_value)
