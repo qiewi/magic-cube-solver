@@ -2,7 +2,9 @@ import numpy as np
 import random
 
 class Cube:
+    # Konstruktor kelas Cube
     def __init__(self):
+        # Inisialisasi besar kubus dan magic numbernya
         self.n = 5
         self.magic_number = 315
 
@@ -11,10 +13,11 @@ class Cube:
         random.shuffle(numbers)
         self.cube = np.array([[[numbers.pop() for _ in range(self.n)] for _ in range(self.n)] for _ in range(self.n)])
 
+    # Fungsi objektif untuk menghitung jumlah perbedaan antara jumlah setiap baris, kolom, dan diagonal dengan magic number
     def objective_function(self):
         # Mengambil magic number
         magic_number = self.magic_number
-        total_difference = 0
+        total_difference = 0 # Nilai objektif paling optimal
 
         # Perbedaan jumlah di setiap baris
         for layer in self.cube:
@@ -64,7 +67,8 @@ class Cube:
 
         return total_difference
 
-    def display_layered(self):
+    # Display Kubus 5x5x5 dengan efek-efek 3 dimensi
+    def display_layered(self): 
         for layer in range(self.n):
             print(f"\nLayer {layer + 1}:\n")
             for row in range(self.n):

@@ -1,86 +1,94 @@
+# Import library yang dibutuhkan
 import numpy as np
 import random, math, time
 import matplotlib.pyplot as plt
 
+# Import model Cube dari models.cube
 from models.cube import Cube
 
 class SimulatedAnnealing():
+    # Konstruktor kelas Simulated Annealing
     def __init__(self):
         self.best_cube = None
         self.best_value = float('inf')
 
-    # Set the best state found
+    # Melakukan set state terhadap cube dan objective value
     def set_state(self, cube, objective_value):
         cubeInstance = Cube()
         cubeInstance.cube = cube
         self.best_cube = cubeInstance
         self.best_value = objective_value
     
-    # Generate a neighbor by swapping two numbers
+    # Melakukan generate neighbor pada current state
     def generate_neighbor(self, current_state, ):
-        # Generate a neighbor by swapping two numbers in the cube
+        # Melakukan copy pada current state
         neighbor_state = np.copy(current_state)
+
+        # Melakukan swap pada dua angka secara acak
         x1, y1, z1 = random.randint(0, 4), random.randint(0, 4), random.randint(0, 4)
         x2, y2, z2 = random.randint(0, 4), random.randint(0, 4), random.randint(0, 4)
         neighbor_state[x1, y1, z1], neighbor_state[x2, y2, z2] = neighbor_state[x2, y2, z2], neighbor_state[x1, y1, z1]
         
-        # Set the modified state in the cube and calculate the objective value
+        # Menghitung nilai objektif dari neighbor
         cube_instance = Cube()
         cube_instance.cube = neighbor_state
         neighbor_objective = cube_instance.objective_function()
 
+        # Mengembalikan neighbor state dan objective
         return neighbor_state, neighbor_objective
     
 
-    # Simulated Annealing Algorithm
+    # Melakukan simulated annealing
     def simulated_annealing(self, cube_instance, initial_temperature, cooling_rate, min_temperature, max_iterations):
-        # Initialize the starting state
+        # Inisialisasi variabel
         T = initial_temperature
         current_state = np.copy(cube_instance.cube)
         current_objective = cube_instance.objective_function()
         
-        # Set the best state found at first
+        # Set state awal
         self.set_state(current_state, current_objective)
 
-        # Initialize arrays to store objective values and acceptance probabilities
+        # Inisialisasi list untuk menyimpan nilai objective function dan acceptance probability
         objective_values = []
         acceptance_probabilities = []
         
-        # Initialize stuck counter and unchanged iterations
+        # Inisialisasi counter stuck dan unchanged iterations
         stuck_counter = 0
         unchanged_iterations = 0
 
+        # Melakukan iterasi sebanyak iterasi maksimal yang di-input
         for iteration in range(max_iterations):
+            # Jika temperatur kurang dari temperatur minimum, maka stop iterasi
             if T < min_temperature:
                 break
 
-            # Generate a neighbor by swapping two numbers
+            # Generate neighbor dengan memanggil fugnsi
             neighbor_state, neighbor_objective = self.generate_neighbor(current_state)
 
-            # Calculate ΔE
+            # Menghitung ΔE
             delta_E = neighbor_objective - current_objective
 
-            # Calculate acceptance probability
+            # Menghitung acceptance probability
             acceptance_probability = math.exp(-delta_E / T) if delta_E > 0 else 1
 
-            # Decide whether to accept the neighbor
+            # Menerima neighbor jika acceptance probability lebih besar dari random uniform
             if random.uniform(0, 1) < acceptance_probability:
                 current_state = neighbor_state
                 current_objective = neighbor_objective
 
-                # Update the best state if the current state is better
+                # Update best state jika nilai objective lebih kecil
                 if current_objective < self.best_value:
                     self.set_state(current_state, current_objective)
 
 
-            # Store the objective value and acceptance probability
+            # Menyimpan nilai objective function
             objective_values.append(current_objective)
 
-            # Store acceptance probability for worse solutions
+            # Menyimpan acceptance probability jika ΔE > 0
             if delta_E > 0:  
                 acceptance_probabilities.append(acceptance_probability)
 
-            # Check if the algorithm is stuck in a local optimum
+            # Jika ΔE = 0, maka tambah unchanged iterations dan stuck counter
             if delta_E == 0:
                 unchanged_iterations += 1
                 stuck_counter += 1
@@ -88,9 +96,11 @@ class SimulatedAnnealing():
             else:
                 unchanged_iterations = 0
 
-            # Update the temperature
+            # Mengurangi temperatur dengan cooling rate
             T *= cooling_rate
 
+            # Menampilkan nilai objective function setiap iterasi
             print(f"iterations: {iteration + 1} - current score: {current_objective}")
 
+        # Mengembalikan kubus terbaik, nilai objektif terbaik, nilai objektif, acceptance probability, dan stuck counter
         return self.best_cube, self.best_value, objective_values, acceptance_probabilities, stuck_counter

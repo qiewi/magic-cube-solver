@@ -1,122 +1,179 @@
+# Import library yang dibutuhkan
 import random
-import time
 import numpy as np
-import matplotlib.pyplot as plt
+
+# Import model Cube dari models.cube
 from models.cube import Cube  
 
 class HillClimbing:
+    # Konstruktor 'pass' karena terdapat banyak variasi algoritma hill climbing
     def __init__(self):
         pass
         
-    # Function to find the best neighbor from the current state
+    # Fungsi untuk mendapatkan neighbor terbaik dari suatu kubus
     def get_neighbor(self, cube, current_score):
+
+        # Inisialisasi variabel untuk menyimpan skor terendah dan swap terbaik
         lowest_score = current_score
-        best_swap = None  # Track the best swap instead of the entire cube
-        n = cube.n  # Cube dimension size
+        best_swap = None 
+        n = cube.n  
         
-        # Generate neighbors by swapping any two distinct elements in the cube
+        # Looping untuk semua kemungkinan swap pada setiap state
         for i in range(n):
             for j in range(n):
                 for k in range(n):
-                    for x in range(i, n):  # Avoid redundant swaps
+                    for x in range(i, n):  
                         for y in range(j if x == i else 0, n):
                             for z in range(k + 1 if x == i and y == j else 0, n):
-                                # Swap elements
+                                # Melakukan swap pada kubus
                                 cube.cube[i, j, k], cube.cube[x, y, z] = cube.cube[x, y, z], cube.cube[i, j, k]
-                                
-                                # Calculate score of the new neighbor state
+
+                                # Menghitung skor dari kubus yang telah di-swap
                                 new_score = cube.objective_function()
+
+                                # Jika skor baru lebih rendah dari skor terendah, maka menyimpan swap tersebut
                                 if new_score < lowest_score:
                                     lowest_score = new_score
-                                    best_swap = (i, j, k, x, y, z)  # Store swap coordinates
+                                    best_swap = (i, j, k, x, y, z)  
                                 
-                                # Revert the swap
+                                # Mengembalikan kubus ke keadaan semula
                                 cube.cube[i, j, k], cube.cube[x, y, z] = cube.cube[x, y, z], cube.cube[i, j, k]
         
-        # Apply the best swap if found
+        # Jika ditemukan swap terbaik, maka dilakukan swap tersebut pada kubus
         if best_swap:
             i, j, k, x, y, z = best_swap
             cube.cube[i, j, k], cube.cube[x, y, z] = cube.cube[x, y, z], cube.cube[i, j, k]
 
+        # Mengembalikan kubus yang telah di-swap
         return cube
 
-    # Steepest Ascent Hill-Climbing with optimizations
+    # Fungsi untuk mendapatkan neighbor terbaik dari suatu kubus
+    def get_all_neighbors(self, cube):
+        # Inisialisasi variabel 
+        n = cube.n  
+        neighbors = []
+        
+        # Looping untuk semua kemungkinan swap pada setiap state
+        for i in range(n):
+            for j in range(n):
+                for k in range(n):
+                    for x in range(i, n):  
+                        for y in range(j if x == i else 0, n):
+                            for z in range(k + 1 if x == i and y == j else 0, n):
+                                # Melakukan swap pada kubus
+                                cube.cube[i, j, k], cube.cube[x, y, z] = cube.cube[x, y, z], cube.cube[i, j, k]
+
+                                # Membuat kubus baru
+                                new_cube = Cube()
+                                new_cube.cube = np.copy(cube.cube)
+
+                                # Menambahkan kubus yang telah di-swap ke dalam list neighbors
+                                neighbors.append(new_cube)
+                                
+                                # Mengembalikan kubus ke keadaan semula
+                                cube.cube[i, j, k], cube.cube[x, y, z] = cube.cube[x, y, z], cube.cube[i, j, k]
+
+        # Mengembalikan semua neighbors
+        return neighbors
+
+    # Fungsi untuk algoritma steepest ascent
     def steepest_ascent(self, cube, max_iterations):
+        # Inisialisasi variabel untuk menyimpan kubus saat ini dan objective function saat ini
         current_state = cube
         current_score = current_state.objective_function()
         iterations = 0
         scores = []
 
+        # Looping hingga mencapai maksimum iterasi
         while iterations < max_iterations:
+
+            # Menyimpan skor pada iterasi saat ini
             scores.append(current_score)
+
+            # Mendapatkan neighbor terbaik dari kubus saat ini
             neighbor = self.get_neighbor(current_state, current_score)
             
-            # Check if a better neighbor was found
+            # Jika tidak ditemukan neighbor terbaik, maka berhenti
             if neighbor is None:
-                break  # No improvement found, terminate early
+                break  # Break loop ketika tidak ada neighbor yang lebih baik
+            # Jika ditemukan neighbor terbaik, maka kubus saat ini diganti dengan neighbor terbaik
             else:
                 current_state = neighbor
                 current_score = current_state.objective_function()
             
+            # Menampilkan skor dan iterasi saat ini
             print(f"iterations: {iterations + 1} - current score: {current_score}")
             iterations += 1
 
+        # Mengembalikan kubus terbaik, nilai objektif terbaik, jumlah iterasi, dan semua objektif function
         return current_state, current_score, len(scores), scores
 
+    # Fungsi untuk algoritma sideways move
     def sideways_move(self, cube, max_sideways):
+        # Inisialisasi variabel untuk menyimpan kubus saat ini dan objective function saat ini
         current_state = cube
         current_score = current_state.objective_function()
-        scores = []  # Stores only the best score from each iteration
-        sideways_count = 0  # Counter for sideways moves
+        scores = []  
+        sideways_count = 0  
 
+        # Looping hingga ditemukan solusi optimal
         while True:
+
+            # Menyimpan skor pada iterasi saat ini
             scores.append(current_score)
 
-            # Get the best neighbor from the current state
+            # Mendapatkan neighbor terbaik dari kubus saat ini
             neighbor = self.get_neighbor(current_state, current_score)
 
-            # Check if a better neighbor was found (self.get_neighbor returns only the best cube)
+            # Mengambil neighbor dan menghitung skor dari neighbor terbaik
             next_state = neighbor
             next_score = next_state.objective_function()
 
+            # Jika skor dari neighbor lebih baik dari skor saat ini, maka kubus saat ini diganti dengan neighbor terbaik
             if next_score < current_score:
-                # Found a better neighbor
                 current_state = next_state
                 current_score = next_score
-                sideways_count = 0  # Reset sideways counter after finding improvement
+                sideways_count = 0  
+            # Jika skor dari neighbor sama dengan skor saat ini, maka kubus saat ini diganti dengan neighbor terbaik
             else:
-                # If no better neighbor, check for sideways move (same score)
+                # Jika skor dari neighbor sama dengan skor saat ini, maka kubus saat ini diganti dengan neighbor terbaik
                 if next_score == current_score:
                     current_state = next_state
                     current_score = next_score
-                    sideways_count += 1  # Increment sideways count for equal score move
+                    sideways_count += 1  # Menambahkan jumlah sideways
+                # Jika skor dari neighbor lebih buruk dari skor saat ini, maka berhenti
                 else:
-                    # No better or sideways move found, exit
                     break
+            
+            print(f"iterations: {len(scores)} - current score: {current_score}")
 
-            print(f"Current score: {current_score}, Iterations: {len(scores)}")
-
-            # Stop if the sideways moves reach the max allowed
+            # Berhenti jika jumlah sideways lebih dari maksimum yang ditentukan
             if sideways_count >= max_sideways:
                 print("Reached max sideways moves, stopping.")
                 break
-
+        
+        # Mengembalikan kubus terbaik, nilai objektif terbaik, jumlah iterasi, dan semua objektif function
         return current_state, current_score, len(scores), scores
 
+    # Fungsi untuk algoritma random restart
     def random_restart(self, cube, max_restarts, max_iterations):
-        best_state = None
-        best_score = float('inf')
-        scores = []  # Untuk menyimpan skor dari semua iterasi dalam semua restart
+        # Inisialisasi variabel untuk menyimpan kubus terbaik, nilai objektif terbaik, dan skor terbaik
+        best_state = cube
+        best_score = best_state.objective_function()
+        scores = []  
 
-        # Lakukan restart beberapa kali hingga mencapai max_restarts
+        # Looping untuk setiap restart
         for restart in range(max_restarts):
+            # Menampilkan jumlah restart
             print(f"\nRestart {restart + 1}/{max_restarts}")
             
-            # Menghasilkan instance cube baru dari cube awal untuk setiap restart
+            # Inisialisasi kubus baru
             cube_instance = Cube()
+
+            # Menjalankan algoritma steepest ascent
             current_state, current_score, _, current_scores = self.steepest_ascent(cube_instance, max_iterations)
 
-            # Menyimpan semua scores dari iterasi ini ke dalam scores
+            # Menyimpan skor dari iterasi saat ini
             scores.extend(current_scores)
 
             # Cek jika skor dari iterasi ini lebih baik dari best_score
@@ -124,6 +181,7 @@ class HillClimbing:
                 best_state = current_state
                 best_score = current_score
 
+            # Menampilkan skor terbaik dari iterasi saat ini
             print(f"End of Restart {restart + 1}: Best score = {best_score}")
             
             # Berhenti jika ditemukan solusi optimal (skor 0)
@@ -134,35 +192,36 @@ class HillClimbing:
         # Mengembalikan hasil terbaik dan semua skor dari semua iterasi
         return best_state, best_score, len(scores), scores
 
-    def stochastic(self, cube, max_iterations=1000):
+    # Fungsi untuk algoritma stochastic
+    def stochastic(self, cube, max_iterations):
+        # Inisialisasi variabel untuk menyimpan kubus saat ini dan objective function saat ini
         current_state = cube
         current_score = current_state.objective_function()
         scores = []
 
+        # Looping hingga mencapai maksimum iterasi
         for iteration in range(max_iterations):
+
+            # Menyimpan skor pada iterasi saat ini
             scores.append(current_score)
 
-            # Generate neighbors (assuming self.get_neighbor returns a list of Cube objects)
-            neighbors = self.get_neighbor(current_state, current_score)
-
-            # Ensure neighbors is a list (if self.get_neighbor returns a single Cube)
-            if isinstance(neighbors, Cube):  # If it's a single Cube, put it in a list
-                neighbors = [neighbors]
-
-            # If there are no neighbors, stop the algorithm
-            if not neighbors:
-                break
-
-            # Randomly select a neighbor
+            # Mendapatkan neighbor terbaik dari kubus saat ini
+            neighbors = self.get_all_neighbors(current_state)
+            
+            # Mengambil neighbor secara acak
             next_state = random.choice(neighbors)
             next_score = next_state.objective_function()
 
-            # Accept the neighbor only if it improves the objective value (lower score)
+            # Jika skor dari neighbor lebih baik dari skor saat ini, maka kubus saat ini diganti dengan neighbor terbaik
             if next_score < current_score:
                 current_state = next_state
                 current_score = next_score
-                print(f"Iteration {iteration + 1}: Improved to score {current_score}")
+            # Jika skor dari neighbor sama dengan skor saat ini, maka kubus saat ini diganti dengan neighbor terbaik
             else:
-                print(f"Iteration {iteration + 1}: No improvement, current score is {current_score}")
+                pass
+            
+            # Menampilkan skor dan iterasi saat ini
+            print(f"Iteration {iteration + 1} - current score: {current_score}")
 
+        # Mengembalikan kubus terbaik, nilai objektif terbaik, jumlah iterasi, dan semua objektif function
         return current_state, current_score, len(scores), scores
