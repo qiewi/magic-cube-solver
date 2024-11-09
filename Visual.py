@@ -1,7 +1,11 @@
 import os, time
 
+# Kode Warna
+white = "\033[97m"
+reset = "\033[96m"
+
 Home = [
-"                                                                                ",
+f"{white}                                                                         ",
 "                                                                                ",
 "                                      (@@@*                                     ",
 "                               .@@@@@#######@@@@@                               ",
@@ -33,40 +37,25 @@ Home = [
 "                                  /@@@. @ #@@@                                   ",
 "                                       @@@                                       ",
 "                                                                                 ",
-"                                                                                 ",
-'Selamat datang di program “Magic Cube Solver”',
-'Ketik "OK" untuk lanjut']
-
-'''-------------------- Menghitung Panjang String --------------------'''
-# Menggunakan metode sentinel
-def length(arr: str,EOP: str) -> int:
-    count = 0 # Inisialisasi awal jumlah character
-    i = 0 # index string
-    cek = True # Kondisi pemberhenti perhitungan
-
-    while cek: # Saat kondisi True (sentinel belum ditemukan)
-        if arr[i] == EOP: # Saat sentinel ditemukan
-            cek = False # Kondisi berubah menjadi False
-        else: # Saat sentinel belum ditemukan
-            count +=1 # Panjang atau jumlah character bertambah 1
-        i+=1 # index string bertambah 1
-
-    return count # Mengembalikan nilai panjang string
+f"{reset}                                                                          ",
+f'Welcome to Our “Magic Cube Solver” Program',
+f'{white}Type "OK" to continue{reset}',
+f'{white}Type "QUIT" to exit{reset}']
 
 '''------------------------------------------------------------ Print Animasi ------------------------------------------------------------'''
 
 '''-------------------- Get Window Size --------------------'''
 def window_size():
-    # get size of the current terminal
+
     size = os.get_terminal_size()
-    # set window width from terminal size
+
     window_width = size.columns
-    # set initial window height from terminal size
+
     window_height = size.lines
-    # we set five line in the bottom for the input, so modified window_height
+
     number_of_lines_for_input = 5
-    window_height -= number_of_lines_for_input # (it is the same as window_height = window_height - number_of_lines_for_input)
-    # return the function with dictionary data
+    window_height -= number_of_lines_for_input 
+
     return [window_width, window_height]
 '''-------------------- Get Window Size --------------------'''
 
@@ -122,10 +111,6 @@ def render_screen(ascii: list, height_of_ascii: int):
 '''-------------------- Render Screen --------------------'''
 
 def display_iteration(display_text, iterations, current_score, option, restarts=None):
-        # ANSI color codes
-        white = "\033[97m"
-        reset = "\033[96m"
-
         if option == "random_restart":
             time.sleep(1)
             display_text.append(f"Restart {white}{iterations + 1}/{restarts}{reset}")
@@ -148,17 +133,14 @@ def display_iteration(display_text, iterations, current_score, option, restarts=
 def printascii(typegambar: str):
     '''-------------------- Atur Warna Terminal--------------------'''
     os.system("cls||clear")
-
-    cmd = 'color 3' # Warna Aqua
-
+    cmd = '\033[96m' # Warna Aqua
     os.system(cmd)
     '''-------------------- Atur Warna Terminal --------------------'''
 
 
     '''-------------------- Tipe Animasi --------------------'''
-
     if typegambar == "home": # Menampilkan Animasi Main Menu (Saat awal sebelum login)
-        render_screen(Home, 35) # Untuk menampilkan ascii
+        render_screen(Home, 36) # Untuk menampilkan ascii
     '''-------------------- Tipe Animasi --------------------'''
 
 '''------------------------------------------------------------ Print Animasi ------------------------------------------------------------'''

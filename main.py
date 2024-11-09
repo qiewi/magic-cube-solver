@@ -27,11 +27,16 @@ if __name__ == "__main__":
         import Visual
         
         Visual.printascii("home")
-        menu = input(">>> ") # Meminta input user
+        menu = input(f"{white}>>> {reset}") # Meminta input user
 
-        if menu == "OK" : # Saat user memasukan command login namun user sudah login
+        if menu.upper() == "OK" : # Saat user memasukan command login namun user sudah login
             Visual.render_screen(algorithm_menu, 10)
-            algorithm_choice = input(">>> ")
+            algorithm_choice = input(f"{white}>>> {reset}")
             run_algorithm(algorithm_choice)
+
+        elif menu.upper() == "QUIT" :
+            Visual.render_screen([f"{white}Goodbye!{reset}"], 1)
+            time.sleep(1)
+            process = False
 
 '''---------------------------------------------------------- Starting Point ----------------------------------------------------------'''

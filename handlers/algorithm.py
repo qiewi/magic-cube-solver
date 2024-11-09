@@ -10,6 +10,10 @@ from algorithm.hill_climbing import HillClimbing
 from algorithm.genetic_algorithm import GeneticAlgorithm
 from algorithm.simulated_annealing import SimulatedAnnealing
 
+# Kode Warna
+white = "\033[97m"
+reset = "\033[96m"
+
 # Fungsi untuk menjalankan algoritma search
 def run_algorithm(algorithm_choice):
     # Inisiasi result apa saja yang akan ditampilkan
@@ -42,10 +46,6 @@ def run_algorithm(algorithm_choice):
     import Visual  
 
     def results_to_array(results):
-        # ANSI color codes
-        white = "\033[97m"
-        reset = "\033[96m"
-        
         display_array = [
             "ALGORITHM RESULTS",
             "",
@@ -65,10 +65,6 @@ def run_algorithm(algorithm_choice):
         return display_array
 
     def cube_to_array(cube_instance, state):
-        # ANSI color codes
-        white = "\033[97m"
-        reset = "\033[96m"
-
         if state == "initial":
             display_array = ["Initial Cube State:"]
         else:
@@ -95,8 +91,11 @@ def run_algorithm(algorithm_choice):
     # Ketika user memilih algoritma genetic
     if algorithm_choice == "6":
         # Meminta input dari user
-        population_size = int(input("Enter population size: "))
-        max_iterations = int(input("Enter maximum iterations: "))
+        Visual.render_screen([f"{white}Enter population size{reset} "], 1)
+        population_size = int(input(f"{white}>>> {reset}"))
+
+        Visual.render_screen([f"{white}Enter maximum iterations{reset}"], 1)
+        max_iterations = int(input(f"{white}>>> {reset}"))
         
         # Inisialisasi search menggunakan algoritma genetic
         search = GeneticAlgorithm()
@@ -139,10 +138,17 @@ def run_algorithm(algorithm_choice):
     # Ketika user memilih algoritma simulated annealing
     elif algorithm_choice == "5":
         # Meminta input dari user
-        initial_temperature = float(input("Enter initial temperature: "))
-        cooling_rate = float(input("Enter cooling rate (0 < cooling rate < 1): "))
-        min_temperature = float(input("Enter minimum temperature: "))
-        max_iterations = int(input("Enter maximum iterations: "))
+        Visual.render_screen([f"{white}Enter initial temperature{reset} "], 1)
+        initial_temperature = float(input(f"{white}>>> {reset}"))
+
+        Visual.render_screen([f"{white}Enter cooling rate (0 < cooling rate < 1){reset} "], 1)
+        cooling_rate = float(input(f"{white}>>> {reset}"))
+
+        Visual.render_screen([f"{white}Enter minimum temperature{reset}"], 1)
+        min_temperature = float(input(f"{white}>>> {reset}"))
+
+        Visual.render_screen([f"{white}Enter maximum iterations{reset} "], 1)
+        max_iterations = int(input(f"{white}>>> {reset}"))
         
         # Inisialisasi search menggunakan algoritma simulated annealing
         search = SimulatedAnnealing()
@@ -206,8 +212,8 @@ def run_algorithm(algorithm_choice):
         # Ketika user memilih algoritma stochastic
         if algorithm_choice == "4":
             # Meminta input dari user
-            Visual.render_screen(["Enter maximum iterations "], 1)
-            max_iterations = int(input(">>> "))
+            Visual.render_screen([f"{white}Enter maximum iterations{reset}"], 1)
+            max_iterations = int(input(f"{white}>>>{reset}"))
 
             # Memulai timer algoritma stochastic
             start_time = time.time()
@@ -220,11 +226,11 @@ def run_algorithm(algorithm_choice):
         # Ketika user memilih algoritma random restart
         elif algorithm_choice == "3":
             # Meminta input dari user
-            Visual.render_screen(["Enter maximum restarts"], 1)
-            max_restarts = int(input(">>> "))
+            Visual.render_screen([f"{white}Enter maximum restarts{reset}"], 1)
+            max_restarts = int(input(f"{white}>>> {reset}"))
 
-            Visual.render_screen(["Enter maximum iterations per restart"], 1)
-            max_iterations = int(input(">>> "))
+            Visual.render_screen([f"{white}Enter maximum iterations per restart{reset}"], 1)
+            max_iterations = int(input(f"{white}>>> {reset}"))
 
             # Memulai timer algoritma random restart
             start_time = time.time()
@@ -235,8 +241,8 @@ def run_algorithm(algorithm_choice):
         # Ketika user memilih algoritma sideways
         elif algorithm_choice == "2":
             # Meminta input dari user
-            Visual.render_screen(["Enter the maximum number of sideways iterations"], 1)
-            max_sideways = int(input(">>> "))
+            Visual.render_screen([f"{white}Enter the maximum number of sideways iterations{reset}"], 1)
+            max_sideways = int(input(f"{white}>>> {reset}"))
 
             # Memulai timer algoritma sideways
             start_time = time.time()
@@ -247,8 +253,8 @@ def run_algorithm(algorithm_choice):
         # Ketika user memilih algoritma steepest
         elif algorithm_choice == "1":
             # Meminta input dari user
-            Visual.render_screen(["Enter maximum iterations"], 1)
-            max_iterations = int(input(">>> "))
+            Visual.render_screen([f"{white}Enter maximum iterations{reset}"], 1)
+            max_iterations = int(input(f"{white}>>> {reset}"))
 
             # Memulai timer algoritma steepest
             start_time = time.time()
@@ -258,8 +264,8 @@ def run_algorithm(algorithm_choice):
         
         # Ketika user memilih algoritma selain angka 1-6
         else:
-            Visual.render_screen(["Invalid algorithm choice! Choose between 1-6."], 1)
-            input("Press ENTER to go back to HOME")
+            Visual.render_screen([f"{white}Invalid algorithm choice! Choose between 1-6.{reset}"], 1)
+            input(f">>> {white}Press ENTER to go back to HOME{reset}")
             return
 
         # Menyelesaikan timer
@@ -286,16 +292,16 @@ def run_algorithm(algorithm_choice):
     # Menampilkan initial state
     initial_state_display = cube_to_array(results['initial_state'], "initial")
     Visual.render_screen(initial_state_display, len(initial_state_display))
-    input("Press ENTER to continue")
+    input(f">>> {white}Press ENTER to continue{reset}")
 
     # Menampilkan final state
     final_state_display = cube_to_array(results['final_state'], "final")
     Visual.render_screen(final_state_display, len(final_state_display))
-    input("Press ENTER to continue")
+    input(f">>> {white}Press ENTER to continue{reset}")
 
     # Menampilkan hasil algoritma
     results_display = results_to_array(results)
     Visual.render_screen(results_display, len(results_display))
-    input("Press ENTER to continue")
+    input(f">>> {white}Press ENTER to continue{reset}")
 
     
