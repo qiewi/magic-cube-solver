@@ -1,23 +1,22 @@
 from handlers.algorithm import run_algorithm
+import time
+
+white = "\033[97m"
+reset = "\033[96m"
 
 algorithm_menu = [
-    "List of available algorithms:             ",
-    "                                          ",
-    "1. Steepest Ascent Hill Climbing          ",
-    "2. Sideways Move                          ",
-    "3. Random Restart Hill Climbing           ",
-    "4. Stochastic Hill Climbing               ",
-    "5. Simulated Annealing                    ",
-    "6. Genetic Algorithm                      ",
-    "                                          ",
-    "Choose an algorithm by number:            "
+    f"    {reset}LIST OF AVAILABLE ALGORITHMS                 ",
+    "                                                         ",
+    f"{white}1. Steepest Ascent Hill Climbing{reset}          ",
+    f"{white}2. Sideways Move{reset}                          ",
+    f"{white}3. Random Restart Hill Climbing{reset}           ",
+    f"{white}4. Stochastic Hill Climbing{reset}               ",
+    f"{white}5. Simulated Annealing{reset}                    ",
+    f"{white}6. Genetic Algorithm{reset}                      ",
+    "                                                         ",
+    f"    {reset}CHOOSE ALGORITHM BY NUMBER                   "
 ]
 
-# # Run main function
-# if __name__ == "__main__":
-#     main()
-
-import time
 
 '''---------------------------------------------------------- Starting Point ----------------------------------------------------------'''
 if __name__ == "__main__":
@@ -32,7 +31,6 @@ if __name__ == "__main__":
 
         if menu == "OK" : # Saat user memasukan command login namun user sudah login
             Visual.render_screen(algorithm_menu, 10)
-            time.sleep(2)
             algorithm_choice = input(">>> ")
             run_algorithm(algorithm_choice)
 

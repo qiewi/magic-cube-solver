@@ -16,14 +16,14 @@ def run_algorithm(algorithm_choice):
     results = {
 
         # Pilihan algoritma
-        'algorithm':
-        {   "1": "Steepest Ascent",
+        'algorithm': {
+            "1": "Steepest Ascent",
             "2": "Sideways",
             "3": "Random Restart",
             "4": "Stochastic",
             "5": "Simulated Annealing",
             "6": "Genetic Algorithm"
-        }[algorithm_choice],
+        }.get(algorithm_choice, "Invalid choice"),
 
         # Semua data untuk setiap algoritma
         'initial_state': [],
@@ -206,7 +206,8 @@ def run_algorithm(algorithm_choice):
         # Ketika user memilih algoritma stochastic
         if algorithm_choice == "4":
             # Meminta input dari user
-            max_iterations = int(input("Enter maximum iterations: "))
+            Visual.render_screen(["Enter maximum iterations "], 1)
+            max_iterations = int(input(">>> "))
 
             # Memulai timer algoritma stochastic
             start_time = time.time()
@@ -219,9 +220,11 @@ def run_algorithm(algorithm_choice):
         # Ketika user memilih algoritma random restart
         elif algorithm_choice == "3":
             # Meminta input dari user
-            
-            max_restarts = int(input("Enter maximum restarts: "))
-            max_iterations = int(input("Enter maximum iterations per restart: "))
+            Visual.render_screen(["Enter maximum restarts"], 1)
+            max_restarts = int(input(">>> "))
+
+            Visual.render_screen(["Enter maximum iterations per restart"], 1)
+            max_iterations = int(input(">>> "))
 
             # Memulai timer algoritma random restart
             start_time = time.time()
@@ -232,7 +235,8 @@ def run_algorithm(algorithm_choice):
         # Ketika user memilih algoritma sideways
         elif algorithm_choice == "2":
             # Meminta input dari user
-            max_sideways = int(input("Enter the maximum number of sideways iterations: "))
+            Visual.render_screen(["Enter the maximum number of sideways iterations"], 1)
+            max_sideways = int(input(">>> "))
 
             # Memulai timer algoritma sideways
             start_time = time.time()
@@ -243,7 +247,7 @@ def run_algorithm(algorithm_choice):
         # Ketika user memilih algoritma steepest
         elif algorithm_choice == "1":
             # Meminta input dari user
-            Visual.render_screen(["Enter maximum iterations: "], 1)
+            Visual.render_screen(["Enter maximum iterations"], 1)
             max_iterations = int(input(">>> "))
 
             # Memulai timer algoritma steepest
@@ -254,7 +258,8 @@ def run_algorithm(algorithm_choice):
         
         # Ketika user memilih algoritma selain angka 1-6
         else:
-            print("Invalid algorithm choice! Choose between 1-6.")
+            Visual.render_screen(["Invalid algorithm choice! Choose between 1-6."], 1)
+            input("Press ENTER to go back to HOME")
             return
 
         # Menyelesaikan timer
@@ -278,42 +283,19 @@ def run_algorithm(algorithm_choice):
         plt.legend()
         plt.show()
 
-    # # Menampilkan semua hasil dari algoritma search yang dipilih
-    # print("-" * 40)
-    # print(f"Algorithm: {results['algorithm']}")
-
-    # # Menampilkan state awal dari cube
-    # results['initial_state'].display_layered()
-    # print(f"\nInitial Objective Value: {results['initial_value']}")
-
-    # # Menampilkan state akhir dari cube
-    # results['final_state'].display_layered()
-    # print(f"\nFinal Objective Value: {results['final_value']}")
-
-    # # Menampilkan stuck counter dari algoritma simulated annealing
-    # if algorithm_choice == "5":
-    #     print(f"Stuck Counter: {results['stuck']}")
-
-    # # Menampilkan ukuran populasi dari algoritma genetic
-    # elif algorithm_choice == "6":
-    #     print(f"Population Size: {results['population_size']}")
-
-    # # Menampilkan jumlah iterasi dan durasi dari algoritma search yang dipilih
-    # print(f"Iterations: {results['iterations']}")
-    # print(f"Duration: {results['duration']:.4f} seconds")
-    # print("-" * 40)
-
-    # Format and display initial state
+    # Menampilkan initial state
     initial_state_display = cube_to_array(results['initial_state'], "initial")
     Visual.render_screen(initial_state_display, len(initial_state_display))
-    input("Press Enter to continue to results...")
+    input("Press ENTER to continue")
 
-    # Format and display results
-    results_display = results_to_array(results)
-    Visual.render_screen(results_display, len(results_display))
-    input("Press Enter to continue to results...")
-
-    # Format and display final state
+    # Menampilkan final state
     final_state_display = cube_to_array(results['final_state'], "final")
     Visual.render_screen(final_state_display, len(final_state_display))
-    input("Press Enter to continue to results...")
+    input("Press ENTER to continue")
+
+    # Menampilkan hasil algoritma
+    results_display = results_to_array(results)
+    Visual.render_screen(results_display, len(results_display))
+    input("Press ENTER to continue")
+
+    
