@@ -76,57 +76,74 @@ import re
 import os
 
 def visible_length(text):
-    """Calculate the length of visible characters, ignoring ANSI codes."""
     ansi_escape = re.compile(r'\x1B[@-_][0-?]*[ -/]*[@-~]')
     return len(ansi_escape.sub('', text))
 
 def render_screen(ascii: list, height_of_ascii: int):
-    os.system("cls||clear")  # Clear terminal before rendering
+    os.system("cls||clear")  
 
-    ws = window_size()  # Get window size
+    ws = window_size() 
 
-    number_of_lines = height_of_ascii  # Number of lines to print
-    vertical_padding_before_divided = ws[1] - number_of_lines  # Total top and bottom padding
+    number_of_lines = height_of_ascii  
+    vertical_padding_before_divided = ws[1] - number_of_lines  
 
-    if vertical_padding_before_divided % 2 != 0:  # If the total padding is odd
+    if vertical_padding_before_divided % 2 != 0:  
         vertical_padding_before_divided -= 1
 
-    vertical_padding = vertical_padding_before_divided // 2  # Split padding evenly
-    line_of_sentence_start = vertical_padding  # Line number where text begins
+    vertical_padding = vertical_padding_before_divided // 2 
+    line_of_sentence_start = vertical_padding  
 
-    for i in range(ws[1]):  # Loop to print each line of the terminal size
+    for i in range(ws[1]): 
 
-        # First and last lines print a full row of '-'
         if i == 0 or i == ws[1] - 1:
             print("-" * ws[0])
 
-        # Empty lines (not for printing text)
         elif i < line_of_sentence_start or i >= line_of_sentence_start + number_of_lines:
             print("|" + " " * (ws[0] - 2) + "|")
 
-        # Lines with text
         else:
-            sentence = ascii[i - line_of_sentence_start]  # Sentence from the list
+            sentence = ascii[i - line_of_sentence_start]  
 
-            # Calculate padding, considering only visible characters
-            horizontal_padding_before_divided = ws[0] - visible_length(sentence) - 2  # Padding for left and right
+            horizontal_padding_before_divided = ws[0] - visible_length(sentence) - 2 
 
-            # Even or odd padding check
             if horizontal_padding_before_divided % 2 == 0:
-                horizontal_padding = horizontal_padding_before_divided // 2  # Both sides equal
+                horizontal_padding = horizontal_padding_before_divided // 2  
                 is_odd = False
             else:
-                horizontal_padding = (horizontal_padding_before_divided - 1) // 2  # Adjust for odd padding
+                horizontal_padding = (horizontal_padding_before_divided - 1) // 2  
                 is_odd = True
 
-            # Print text with borders and padding
             print("|" + " " * horizontal_padding + sentence, end="")
             if is_odd:
-                print(" " * (horizontal_padding + 1) + "|")  # Extra space for odd padding
+                print(" " * (horizontal_padding + 1) + "|") 
             else:
-                print(" " * horizontal_padding + "|")  # Even padding
+                print(" " * horizontal_padding + "|") 
 
 '''-------------------- Render Screen --------------------'''
+
+def display_iteration(display_text, iterations, current_score, option, restarts=None):
+        # ANSI color codes
+        white = "\033[97m"
+        reset = "\033[96m"
+
+        if option == "random_restart":
+            time.sleep(1)
+            display_text.append(f"Restart {white}{iterations + 1}/{restarts}{reset}")
+            display_text.append(f"End of Restart {white}{iterations + 1}{reset} | {white}Best score = {current_score}{reset}")
+            display_text.append(" ")
+        else:
+            display_text.append(f"Iteration: {white}{iterations + 1}{reset}")
+            display_text.append(f"Current Score: {white}{current_score}{reset}")
+            display_text.append(" ")
+
+        # Use render_screen to display the formatted text
+        render_screen(display_text, len(display_text))
+
+        # Clear the screen every 10 iterations
+        if (iterations + 1) % 5 == 0:
+            display_text = []
+
+        return display_text
 
 def printascii(typegambar: str):
     '''-------------------- Atur Warna Terminal--------------------'''
@@ -142,8 +159,6 @@ def printascii(typegambar: str):
 
     if typegambar == "home": # Menampilkan Animasi Main Menu (Saat awal sebelum login)
         render_screen(Home, 35) # Untuk menampilkan ascii
-        time.sleep(0.5)
-        time.sleep(1)
     '''-------------------- Tipe Animasi --------------------'''
 
 '''------------------------------------------------------------ Print Animasi ------------------------------------------------------------'''

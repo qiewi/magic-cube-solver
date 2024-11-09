@@ -1,6 +1,7 @@
 # Import library yang dibutuhkan
 import numpy as np
 import random, math, time
+import Visual
 import matplotlib.pyplot as plt
 
 # Import model Cube dari models.cube
@@ -43,10 +44,11 @@ class SimulatedAnnealing():
         # Inisialisasi variabel
         T = initial_temperature
         current_state = np.copy(cube_instance.cube)
-        current_objective = cube_instance.objective_function()
+        current_score = cube_instance.objective_function()
+        display_text = []
         
         # Set state awal
-        self.set_state(current_state, current_objective)
+        self.set_state(current_state, current_score)
 
         # Inisialisasi list untuk menyimpan nilai objective function dan acceptance probability
         objective_values = []
@@ -66,7 +68,7 @@ class SimulatedAnnealing():
             neighbor_state, neighbor_objective = self.generate_neighbor(current_state)
 
             # Menghitung ΔE
-            delta_E = neighbor_objective - current_objective
+            delta_E = neighbor_objective - current_score
 
             # Menghitung acceptance probability
             acceptance_probability = math.exp(-delta_E / T) if delta_E > 0 else 1
@@ -74,15 +76,15 @@ class SimulatedAnnealing():
             # Menerima neighbor jika acceptance probability lebih besar dari random uniform
             if random.uniform(0, 1) < acceptance_probability:
                 current_state = neighbor_state
-                current_objective = neighbor_objective
+                current_score = neighbor_objective
 
                 # Update best state jika nilai objective lebih kecil
-                if current_objective < self.best_value:
-                    self.set_state(current_state, current_objective)
+                if current_score < self.best_value:
+                    self.set_state(current_state, current_score)
 
 
             # Menyimpan nilai objective function
-            objective_values.append(current_objective)
+            objective_values.append(current_score)
 
             # Menyimpan acceptance probability jika ΔE > 0
             if delta_E > 0:  
@@ -100,7 +102,7 @@ class SimulatedAnnealing():
             T *= cooling_rate
 
             # Menampilkan nilai objective function setiap iterasi
-            print(f"iterations: {iteration + 1} - current score: {current_objective}")
+            display_text = Visual.display_iteration(display_text, iteration, current_score, "simulated_annealing")
 
         # Mengembalikan kubus terbaik, nilai objektif terbaik, nilai objektif, acceptance probability, dan stuck counter
         return self.best_cube, self.best_value, objective_values, acceptance_probabilities, stuck_counter

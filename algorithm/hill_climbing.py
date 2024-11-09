@@ -10,30 +10,6 @@ class HillClimbing:
     # Konstruktor 'pass' karena terdapat banyak variasi algoritma hill climbing
     def __init__(self):
         pass
-
-    def display_iteration(self, display_text, iterations, current_score, option, restarts=None):
-        # ANSI color codes
-        white = "\033[97m"
-        reset = "\033[96m"
-
-        if option == "random_restart":
-            time.sleep(1)
-            display_text.append(f"Restart {white}{iterations + 1}/{restarts}{reset}")
-            display_text.append(f"End of Restart {white}{iterations + 1}{reset} | {white}Best score = {current_score}{reset}")
-            display_text.append(" ")
-        else:
-            display_text.append(f"Iteration: {white}{iterations + 1}{reset}")
-            display_text.append(f"Current Score: {white}{current_score}{reset}")
-            display_text.append(" ")
-
-        # Use render_screen to display the formatted text
-        Visual.render_screen(display_text, len(display_text))
-
-        # Clear the screen every 10 iterations
-        if (iterations + 1) % 5 == 0:
-            display_text = []
-
-        return display_text
         
     # Fungsi untuk mendapatkan neighbor terbaik dari suatu kubus
     def get_neighbor(self, cube, current_score):
@@ -127,7 +103,7 @@ class HillClimbing:
                 current_state = neighbor
                 current_score = current_state.objective_function()
             
-            display_text = self.display_iteration(display_text, iterations, current_score, "stepest_ascent")
+            display_text = Visual.display_iteration(display_text, iterations, current_score, "stepest_ascent")
 
             iterations += 1
 
@@ -173,7 +149,7 @@ class HillClimbing:
                 else:
                     break
             
-            display_text = self.display_iteration(display_text, iterations, current_score, "sideways_move")
+            display_text = Visual.display_iteration(display_text, iterations, current_score, "sideways_move")
 
             iterations += 1
 
@@ -211,7 +187,7 @@ class HillClimbing:
                 best_state = current_state
                 best_score = current_score
 
-            display_text = self.display_iteration(display_text, restart, current_score, "random_restart", max_restarts)
+            display_text = Visual.display_iteration(display_text, restart, current_score, "random_restart", max_restarts)
             
             # Berhenti jika ditemukan solusi optimal (skor 0)
             if current_score == 0:
@@ -251,7 +227,7 @@ class HillClimbing:
                 pass
             
             # Menampilkan skor dan iterasi saat ini
-            display_text = self.display_iteration(display_text, iteration, current_score, "stochastic")
+            display_text = Visual.display_iteration(display_text, iteration, current_score, "stochastic")
 
         # Mengembalikan kubus terbaik, nilai objektif terbaik, jumlah iterasi, dan semua objektif function
         return current_state, current_score, len(scores), scores

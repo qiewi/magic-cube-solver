@@ -1,6 +1,7 @@
 # Import library yang dibutuhkan
 import numpy as np
 import random
+import Visual
 
 # Import class Cube dari models.cube
 from models.cube import Cube
@@ -10,6 +11,7 @@ class GeneticAlgorithm:
     def __init__(self):
         self.best_cube = None
         self.best_value = float('inf')
+        self.display_text = []
         
     # Inisialisasi populasi
     def populate(self, population_size):
@@ -76,7 +78,7 @@ class GeneticAlgorithm:
         min_scores = []
         avg_scores = []
 
-        for i in range(max_iterations):
+        for iteration in range(max_iterations):
 
             # Inisialisasi populasi
             population = self.populate(population_size)
@@ -103,7 +105,7 @@ class GeneticAlgorithm:
                 self.best_cube = population[scores.index(self.best_value)]
 
             # Menampilkan nilai objektif terbaik setiap iterasi
-            print(f"iterations: {i + 1} - current score: {self.best_value}")
+            self.display_text = Visual.display_iteration(self.display_text, iteration, self.best_value, "genetic")
 
         # Mengembalikan kubus terbaik, nilai objektif terbaik, populasi, nilai objektif terendah, dan nilai objektif rata-rata
         return self.best_cube, self.best_value, population, min_scores, avg_scores
