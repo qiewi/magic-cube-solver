@@ -62,7 +62,6 @@ def window_size():
 
 '''-------------------- Render Screen --------------------'''
 import re
-import os
 
 def visible_length(text):
     ansi_escape = re.compile(r'\x1B[@-_][0-?]*[ -/]*[@-~]')
@@ -110,6 +109,7 @@ def render_screen(ascii: list, height_of_ascii: int):
 
 '''-------------------- Render Screen --------------------'''
 
+'''-------------------- Print Iterasi --------------------'''
 def display_iteration(display_text, iterations, current_score, option, restarts=None):
         if option == "random_restart":
             time.sleep(1)
@@ -129,6 +129,9 @@ def display_iteration(display_text, iterations, current_score, option, restarts=
             display_text = []
 
         return display_text
+'''-------------------- Print Iterasi --------------------'''
+
+'''------------------------------------------------------------ Print ASCII ------------------------------------------------------------'''
 
 def printascii(typegambar: str):
     '''-------------------- Atur Warna Terminal--------------------'''
@@ -142,5 +145,7 @@ def printascii(typegambar: str):
     if typegambar == "home": # Menampilkan Animasi Main Menu (Saat awal sebelum login)
         render_screen(Home, 36) # Untuk menampilkan ascii
     '''-------------------- Tipe Animasi --------------------'''
+
+'''------------------------------------------------------------ Print ASCII ------------------------------------------------------------'''
 
 '''------------------------------------------------------------ Print Animasi ------------------------------------------------------------'''

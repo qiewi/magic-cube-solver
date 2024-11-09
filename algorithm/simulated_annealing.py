@@ -8,19 +8,21 @@ import matplotlib.pyplot as plt
 from models.cube import Cube
 
 class SimulatedAnnealing():
-    # Konstruktor kelas Simulated Annealing
+    '''-------------------- Konstruktor Kelas --------------------'''
     def __init__(self):
         self.best_cube = None
         self.best_value = float('inf')
+    '''-------------------- Konstruktor Kelas --------------------'''
 
-    # Melakukan set state terhadap cube dan objective value
+    '''-------------------- Set State dan Objetive Value --------------------'''
     def set_state(self, cube, objective_value):
         cubeInstance = Cube()
         cubeInstance.cube = cube
         self.best_cube = cubeInstance
         self.best_value = objective_value
-    
-    # Melakukan generate neighbor pada current state
+    '''-------------------- Set State dan Objetive Value --------------------'''
+
+    '''-------------------- Generate Neighbor --------------------'''
     def generate_neighbor(self, current_state, ):
         # Melakukan copy pada current state
         neighbor_state = np.copy(current_state)
@@ -37,9 +39,10 @@ class SimulatedAnnealing():
 
         # Mengembalikan neighbor state dan objective
         return neighbor_state, neighbor_objective
+    '''-------------------- Generate Neighbor --------------------'''
     
 
-    # Melakukan simulated annealing
+    '''-------------------- Fungsi Utama Simulated Annealing --------------------'''
     def simulated_annealing(self, cube_instance, initial_temperature, cooling_rate, min_temperature, max_iterations):
         # Inisialisasi variabel
         T = initial_temperature
@@ -106,3 +109,4 @@ class SimulatedAnnealing():
 
         # Mengembalikan kubus terbaik, nilai objektif terbaik, nilai objektif, acceptance probability, dan stuck counter
         return self.best_cube, self.best_value, objective_values, acceptance_probabilities, stuck_counter
+    '''-------------------- Fungsi Utama Simulated Annealing --------------------'''

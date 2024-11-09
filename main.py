@@ -1,9 +1,13 @@
+# Import library yang dibutuhkan
 from handlers.algorithm import run_algorithm
 import time
 
+'''-------------------- Kode Warna --------------------'''
 white = "\033[97m"
 reset = "\033[96m"
+'''-------------------- Kode Warna --------------------'''
 
+'''-------------------- Menu Awal --------------------'''
 algorithm_menu = [
     f"    {reset}LIST OF AVAILABLE ALGORITHMS                 ",
     "                                                         ",
@@ -16,6 +20,7 @@ algorithm_menu = [
     "                                                         ",
     f"    {reset}CHOOSE ALGORITHM BY NUMBER                   "
 ]
+'''-------------------- Menu Awal --------------------'''
 
 
 '''---------------------------------------------------------- Starting Point ----------------------------------------------------------'''
@@ -23,13 +28,13 @@ if __name__ == "__main__":
 
     process = True
 
-    while process: # Saat status process = True
+    while process:
         import Visual
         
         Visual.printascii("home")
-        menu = input(f"{white}>>> {reset}") # Meminta input user
+        menu = input(f"{white}>>> {reset}") 
 
-        if menu.upper() == "OK" : # Saat user memasukan command login namun user sudah login
+        if menu.upper() == "OK" : 
             Visual.render_screen(algorithm_menu, 10)
             algorithm_choice = input(f"{white}>>> {reset}")
             run_algorithm(algorithm_choice)
@@ -38,5 +43,9 @@ if __name__ == "__main__":
             Visual.render_screen([f"{white}Goodbye!{reset}"], 1)
             time.sleep(1)
             process = False
+
+        else:
+            Visual.render_screen([f"{white}Invalid command! Choose between 'OK' or 'QUIT.{reset}"], 1)
+            input(f">>> {white}Press ENTER to go back to HOME{reset}")
 
 '''---------------------------------------------------------- Starting Point ----------------------------------------------------------'''

@@ -1,6 +1,7 @@
 # Import semua library yang dibutuhkan
 import time
 import matplotlib.pyplot as plt
+import Visual 
 
 # Import cube model
 from models.cube import Cube
@@ -16,6 +17,7 @@ reset = "\033[96m"
 
 # Fungsi untuk menjalankan algoritma search
 def run_algorithm(algorithm_choice):
+    '''-------------------- Inisialisasi Variabel --------------------'''
     # Inisiasi result apa saja yang akan ditampilkan
     results = {
 
@@ -42,9 +44,11 @@ def run_algorithm(algorithm_choice):
         # Khusus Genetic Algorithm
         'population_size': [],
     }
+    '''-------------------- Inisialisasi Variabel --------------------'''
 
-    import Visual  
+     
 
+    '''-------------------- Mengubah Results menjadi Display Array --------------------'''
     def results_to_array(results):
         display_array = [
             "ALGORITHM RESULTS",
@@ -63,7 +67,10 @@ def run_algorithm(algorithm_choice):
         
         display_array.append("")  
         return display_array
+    '''-------------------- Mengubah Results menjadi Display Array --------------------'''
 
+
+    '''-------------------- Mengubah Cube menjadi Display Array --------------------'''  
     def cube_to_array(cube_instance, state):
         if state == "initial":
             display_array = ["Initial Cube State:"]
@@ -80,13 +87,18 @@ def run_algorithm(algorithm_choice):
                 display_array.append(row_str)  
             display_array.append(reset) 
         return display_array
+    '''-------------------- Mengubah Cube menjadi Display Array --------------------'''  
 
+    '''-------------------- Menyimpan Cube --------------------'''
     # Generate cube awal
     cube_instance = Cube()
     
     # Simpan semua data awal
     results['initial_state'] = cube_instance  
     results['initial_value'] = cube_instance.objective_function()
+    '''-------------------- Menyimpan Cube --------------------'''
+
+    '''---------------------------------------------------------- Menjalankan Algoritma ----------------------------------------------------------'''
 
     # Ketika user memilih algoritma genetic
     if algorithm_choice == "6":
@@ -288,6 +300,10 @@ def run_algorithm(algorithm_choice):
         plt.title("Objective Function vs Iterations (" + algorithm_choice.capitalize() + ")")
         plt.legend()
         plt.show()
+    
+    '''---------------------------------------------------------- Menjalankan Algoritma ----------------------------------------------------------'''
+
+    '''---------------------------------------------------------- Menampilkan State dan Hasil ----------------------------------------------------------'''
 
     # Menampilkan initial state
     initial_state_display = cube_to_array(results['initial_state'], "initial")
@@ -303,5 +319,7 @@ def run_algorithm(algorithm_choice):
     results_display = results_to_array(results)
     Visual.render_screen(results_display, len(results_display))
     input(f">>> {white}Press ENTER to continue{reset}")
+
+    '''---------------------------------------------------------- Menampilkan State dan Hasil ----------------------------------------------------------'''
 
     

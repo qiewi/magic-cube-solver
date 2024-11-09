@@ -7,10 +7,12 @@ import Visual
 from models.cube import Cube  
 
 class HillClimbing:
-    # Konstruktor 'pass' karena terdapat banyak variasi algoritma hill climbing
+    '''-------------------- Konstruktor Kelas --------------------'''
     def __init__(self):
-        pass
-        
+        pass # Konstruktor 'pass' karena terdapat banyak variasi algoritma hill climbing
+    '''-------------------- Set State dan Objetive Value --------------------'''
+    
+    '''-------------------- Get Best Neighbor --------------------'''
     # Fungsi untuk mendapatkan neighbor terbaik dari suatu kubus
     def get_neighbor(self, cube, current_score):
 
@@ -47,8 +49,10 @@ class HillClimbing:
 
         # Mengembalikan kubus yang telah di-swap
         return cube
+    '''-------------------- Get Best Neighbor --------------------'''
 
-    # Fungsi untuk mendapatkan neighbor terbaik dari suatu kubus
+    '''-------------------- Get All Neighbors --------------------'''
+    # Fungsi untuk mendapatkan semua neighbor dari suatu kubus
     def get_all_neighbors(self, cube):
         # Inisialisasi variabel 
         n = cube.n  
@@ -76,7 +80,9 @@ class HillClimbing:
 
         # Mengembalikan semua neighbors
         return neighbors
+    '''-------------------- Get All Neighbors --------------------'''
 
+    '''------------------------------------------------------------ Steepest Ascent ------------------------------------------------------------'''
     # Fungsi untuk algoritma steepest ascent
     def steepest_ascent(self, cube, max_iterations):
         # Inisialisasi variabel untuk menyimpan kubus saat ini dan objective function saat ini
@@ -109,7 +115,9 @@ class HillClimbing:
 
         # Mengembalikan kubus terbaik, nilai objektif terbaik, jumlah iterasi, dan semua objektif function
         return current_state, current_score, len(scores), scores
+    '''------------------------------------------------------------ Steepest Ascent ------------------------------------------------------------'''
 
+    '''------------------------------------------------------------ Sideways Move ------------------------------------------------------------'''
     # Fungsi untuk algoritma sideways move
     def sideways_move(self, cube, max_sideways):
         # Inisialisasi variabel untuk menyimpan kubus saat ini dan objective function saat ini
@@ -160,7 +168,9 @@ class HillClimbing:
         
         # Mengembalikan kubus terbaik, nilai objektif terbaik, jumlah iterasi, dan semua objektif function
         return current_state, current_score, len(scores), scores
+    '''------------------------------------------------------------ Sideways Move ------------------------------------------------------------'''
 
+    '''------------------------------------------------------------ Random Restart ------------------------------------------------------------'''
     # Fungsi untuk algoritma random restart
     def random_restart(self, cube, max_restarts, max_iterations):
         # Inisialisasi variabel untuk menyimpan kubus terbaik, nilai objektif terbaik, dan skor terbaik
@@ -196,7 +206,9 @@ class HillClimbing:
 
         # Mengembalikan hasil terbaik dan semua skor dari semua iterasi
         return best_state, best_score, len(scores), scores
+    '''------------------------------------------------------------ Random Restart ------------------------------------------------------------'''
 
+    '''------------------------------------------------------------ Stochastic ------------------------------------------------------------'''
     # Fungsi untuk algoritma stochastic
     def stochastic(self, cube, max_iterations):
         # Inisialisasi variabel untuk menyimpan kubus saat ini dan objective function saat ini
@@ -231,3 +243,4 @@ class HillClimbing:
 
         # Mengembalikan kubus terbaik, nilai objektif terbaik, jumlah iterasi, dan semua objektif function
         return current_state, current_score, len(scores), scores
+    '''------------------------------------------------------------ Stochastic ------------------------------------------------------------'''

@@ -7,17 +7,21 @@ import Visual
 from models.cube import Cube
 
 class GeneticAlgorithm:
-    # Konstruktor kelas algoritma genetik
+    '''-------------------- Konstruktor Kelas --------------------'''
     def __init__(self):
         self.best_cube = None
         self.best_value = float('inf')
         self.display_text = []
-        
+    '''-------------------- Konstruktor Kelas --------------------'''
+    
+    '''-------------------- Inisiasi Populasi Genetik --------------------'''
     # Inisialisasi populasi
     def populate(self, population_size):
         population = [Cube() for _ in range(population_size)]
         return population
+    '''-------------------- Inisiasi Populasi Genetik --------------------'''
 
+    '''-------------------- Selection Process --------------------'''
     # Proses seleksi
     def selection(self, population):
         # Menghitung nilai objektif untuk setiap kubus dalam populasi
@@ -39,7 +43,9 @@ class GeneticAlgorithm:
         
         # Mengembalikan parents yang telah dipilih
         return parents
+    '''-------------------- Selection Process --------------------'''
 
+    '''-------------------- Cross-Over Process --------------------'''
     # Proses Crossover
     def crossover(self, parents):
         new_population = []
@@ -61,7 +67,9 @@ class GeneticAlgorithm:
         
         # Mengembalikan populasi baru yang telah di-cross-over
         return new_population
+    '''-------------------- Cross-Over Process --------------------'''
 
+    '''-------------------- Mutation Process --------------------'''
     # Proses Mutasi
     def mutation(self, new_population):
         # Melakukan mutasi pada populasi baru pada indeks acak
@@ -70,7 +78,9 @@ class GeneticAlgorithm:
         
         # Mengembalikan populasi baru yang telah dimutasi
         return new_population
+    '''-------------------- Mutation Process --------------------'''
 
+    '''-------------------- Fungsi Utama Genetic Algorithm --------------------'''
     # Proses pencarian menggunakan algoritma genetik
     def genetic_search(self, population_size, max_iterations):    
 
@@ -109,5 +119,6 @@ class GeneticAlgorithm:
 
         # Mengembalikan kubus terbaik, nilai objektif terbaik, populasi, nilai objektif terendah, dan nilai objektif rata-rata
         return self.best_cube, self.best_value, population, min_scores, avg_scores
+    '''-------------------- Fungsi Utama Genetic Algorithm --------------------'''
 
         
