@@ -1,6 +1,7 @@
 # Import library yang dibutuhkan
-import random
+import random, time
 import numpy as np
+import Visual
 
 # Import model Cube dari models.cube
 from models.cube import Cube  
@@ -9,6 +10,30 @@ class HillClimbing:
     # Konstruktor 'pass' karena terdapat banyak variasi algoritma hill climbing
     def __init__(self):
         pass
+
+    def display_iteration(self, display_text, iterations, current_score, option, restarts=None):
+        # ANSI color codes
+        white = "\033[97m"
+        reset = "\033[96m"
+
+        if option == "random_restart":
+            time.sleep(1)
+            display_text.append(f"Restart {white}{iterations + 1}/{restarts}{reset}")
+            display_text.append(f"End of Restart {white}{iterations + 1}{reset} | {white}Best score = {current_score}{reset}")
+            display_text.append(" ")
+        else:
+            display_text.append(f"Iteration: {white}{iterations + 1}{reset}")
+            display_text.append(f"Current Score: {white}{current_score}{reset}")
+            display_text.append(" ")
+
+        # Use render_screen to display the formatted text
+        Visual.render_screen(display_text, len(display_text))
+
+        # Clear the screen every 10 iterations
+        if (iterations + 1) % 5 == 0:
+            display_text = []
+
+        return display_text
         
     # Fungsi untuk mendapatkan neighbor terbaik dari suatu kubus
     def get_neighbor(self, cube, current_score):
@@ -83,6 +108,7 @@ class HillClimbing:
         current_score = current_state.objective_function()
         iterations = 0
         scores = []
+        display_text = []
 
         # Looping hingga mencapai maksimum iterasi
         while iterations < max_iterations:
@@ -101,8 +127,8 @@ class HillClimbing:
                 current_state = neighbor
                 current_score = current_state.objective_function()
             
-            # Menampilkan skor dan iterasi saat ini
-            print(f"iterations: {iterations + 1} - current score: {current_score}")
+            display_text = self.display_iteration(display_text, iterations, current_score, "stepest_ascent")
+
             iterations += 1
 
         # Mengembalikan kubus terbaik, nilai objektif terbaik, jumlah iterasi, dan semua objektif function
@@ -114,6 +140,8 @@ class HillClimbing:
         current_state = cube
         current_score = current_state.objective_function()
         scores = []  
+        display_text = []
+        iterations = 0
         sideways_count = 0  
 
         # Looping hingga ditemukan solusi optimal
@@ -145,7 +173,9 @@ class HillClimbing:
                 else:
                     break
             
-            print(f"iterations: {len(scores)} - current score: {current_score}")
+            display_text = self.display_iteration(display_text, iterations, current_score, "sideways_move")
+
+            iterations += 1
 
             # Berhenti jika jumlah sideways lebih dari maksimum yang ditentukan
             if sideways_count >= max_sideways:
@@ -161,11 +191,11 @@ class HillClimbing:
         best_state = cube
         best_score = best_state.objective_function()
         scores = []  
+        display_text = []
 
         # Looping untuk setiap restart
         for restart in range(max_restarts):
-            # Menampilkan jumlah restart
-            print(f"\nRestart {restart + 1}/{max_restarts}")
+            
             
             # Inisialisasi kubus baru
             cube_instance = Cube()
@@ -181,8 +211,7 @@ class HillClimbing:
                 best_state = current_state
                 best_score = current_score
 
-            # Menampilkan skor terbaik dari iterasi saat ini
-            print(f"End of Restart {restart + 1}: Best score = {best_score}")
+            display_text = self.display_iteration(display_text, restart, current_score, "random_restart", max_restarts)
             
             # Berhenti jika ditemukan solusi optimal (skor 0)
             if current_score == 0:
@@ -198,6 +227,7 @@ class HillClimbing:
         current_state = cube
         current_score = current_state.objective_function()
         scores = []
+        display_text = []
 
         # Looping hingga mencapai maksimum iterasi
         for iteration in range(max_iterations):
@@ -221,7 +251,7 @@ class HillClimbing:
                 pass
             
             # Menampilkan skor dan iterasi saat ini
-            print(f"Iteration {iteration + 1} - current score: {current_score}")
+            display_text = self.display_iteration(display_text, iteration, current_score, "stochastic")
 
         # Mengembalikan kubus terbaik, nilai objektif terbaik, jumlah iterasi, dan semua objektif function
         return current_state, current_score, len(scores), scores

@@ -76,4 +76,8 @@ class Cube:
                 for col in range(self.n):
                     print(f"{self.cube[layer][row][col]:>4}", end="   ")  
                 print("")  
-    
+
+cube = Cube()
+print(cube.objective_function())
+cube.display_layered()
+print("\033[97mThis text is white\033[0m and this is default.")

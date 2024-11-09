@@ -12,7 +12,7 @@ from algorithm.simulated_annealing import SimulatedAnnealing
 
 # Fungsi untuk menjalankan algoritma search
 def run_algorithm(algorithm_choice):
-    #Inisiasi result apa saja yang akan ditampilkan
+    # Inisiasi result apa saja yang akan ditampilkan
     results = {
 
         # Pilihan algoritma
@@ -38,6 +38,52 @@ def run_algorithm(algorithm_choice):
         # Khusus Genetic Algorithm
         'population_size': [],
     }
+
+    import Visual  
+
+    def results_to_array(results):
+        # ANSI color codes
+        white = "\033[97m"
+        reset = "\033[96m"
+        
+        display_array = [
+            "ALGORITHM RESULTS",
+            "",
+            f"Algorithm: {white}{results['algorithm']}{reset}",
+            f"Initial Objective Value: {white}{results['initial_value']}{reset}",
+            f"Final Objective Value: {white}{results['final_value']}{reset}",
+            f"Iterations: {white}{results['iterations']}{reset}",
+            f"Duration: {white}{results['duration']:.4f} seconds{reset}",
+        ]
+        
+        if 'stuck' in results:
+            display_array.append(f"Stuck Counter: {white}{results['stuck']}{reset}")
+        if 'population_size' in results:
+            display_array.append(f"Population Size: {white}{results['population_size']}{reset}")
+        
+        display_array.append("")  
+        return display_array
+
+    def cube_to_array(cube_instance, state):
+        # ANSI color codes
+        white = "\033[97m"
+        reset = "\033[96m"
+
+        if state == "initial":
+            display_array = ["Initial Cube State:"]
+        else:
+            display_array = ["Final Cube State:"]
+
+        for layer in range(cube_instance.n):
+            display_array.append(f"Layer {layer + 1}:" + " " * 60)
+            display_array.append("")
+            for row in range(cube_instance.n):
+                row_str = white + " " * (30 + 15 - (5 * row)) 
+                row_str += "  ".join(f"{cube_instance.cube[layer][row][col]:>4}" for col in range(cube_instance.n))
+                row_str += " " * (30 + 15 - row) 
+                display_array.append(row_str)  
+            display_array.append(reset) 
+        return display_array
 
     # Generate cube awal
     cube_instance = Cube()
@@ -173,6 +219,7 @@ def run_algorithm(algorithm_choice):
         # Ketika user memilih algoritma random restart
         elif algorithm_choice == "3":
             # Meminta input dari user
+            
             max_restarts = int(input("Enter maximum restarts: "))
             max_iterations = int(input("Enter maximum iterations per restart: "))
 
@@ -196,7 +243,8 @@ def run_algorithm(algorithm_choice):
         # Ketika user memilih algoritma steepest
         elif algorithm_choice == "1":
             # Meminta input dari user
-            max_iterations = int(input("Enter maximum iterations: "))
+            Visual.render_screen(["Enter maximum iterations: "], 1)
+            max_iterations = int(input(">>> "))
 
             # Memulai timer algoritma steepest
             start_time = time.time()
@@ -230,27 +278,42 @@ def run_algorithm(algorithm_choice):
         plt.legend()
         plt.show()
 
-    # Menampilkan semua hasil dari algoritma search yang dipilih
-    print("-" * 40)
-    print(f"Algorithm: {results['algorithm']}")
+    # # Menampilkan semua hasil dari algoritma search yang dipilih
+    # print("-" * 40)
+    # print(f"Algorithm: {results['algorithm']}")
 
-    # Menampilkan state awal dari cube
-    results['initial_state'].display_layered()
-    print(f"\nInitial Objective Value: {results['initial_value']}")
+    # # Menampilkan state awal dari cube
+    # results['initial_state'].display_layered()
+    # print(f"\nInitial Objective Value: {results['initial_value']}")
 
-    # Menampilkan state akhir dari cube
-    results['final_state'].display_layered()
-    print(f"\nFinal Objective Value: {results['final_value']}")
+    # # Menampilkan state akhir dari cube
+    # results['final_state'].display_layered()
+    # print(f"\nFinal Objective Value: {results['final_value']}")
 
-    # Menampilkan stuck counter dari algoritma simulated annealing
-    if algorithm_choice == "5":
-        print(f"Stuck Counter: {results['stuck']}")
+    # # Menampilkan stuck counter dari algoritma simulated annealing
+    # if algorithm_choice == "5":
+    #     print(f"Stuck Counter: {results['stuck']}")
 
-    # Menampilkan ukuran populasi dari algoritma genetic
-    elif algorithm_choice == "6":
-        print(f"Population Size: {results['population_size']}")
+    # # Menampilkan ukuran populasi dari algoritma genetic
+    # elif algorithm_choice == "6":
+    #     print(f"Population Size: {results['population_size']}")
 
-    # Menampilkan jumlah iterasi dan durasi dari algoritma search yang dipilih
-    print(f"Iterations: {results['iterations']}")
-    print(f"Duration: {results['duration']:.4f} seconds")
-    print("-" * 40)
+    # # Menampilkan jumlah iterasi dan durasi dari algoritma search yang dipilih
+    # print(f"Iterations: {results['iterations']}")
+    # print(f"Duration: {results['duration']:.4f} seconds")
+    # print("-" * 40)
+
+    # Format and display initial state
+    initial_state_display = cube_to_array(results['initial_state'], "initial")
+    Visual.render_screen(initial_state_display, len(initial_state_display))
+    input("Press Enter to continue to results...")
+
+    # Format and display results
+    results_display = results_to_array(results)
+    Visual.render_screen(results_display, len(results_display))
+    input("Press Enter to continue to results...")
+
+    # Format and display final state
+    final_state_display = cube_to_array(results['final_state'], "final")
+    Visual.render_screen(final_state_display, len(final_state_display))
+    input("Press Enter to continue to results...")
