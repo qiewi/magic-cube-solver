@@ -46,6 +46,8 @@ class HillClimbing:
         if best_swap:
             i, j, k, x, y, z = best_swap
             cube.cube[i, j, k], cube.cube[x, y, z] = cube.cube[x, y, z], cube.cube[i, j, k]
+        else:
+            cube = None
 
         # Mengembalikan kubus yang telah di-swap
         return cube
