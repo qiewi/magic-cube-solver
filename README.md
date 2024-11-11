@@ -1,4 +1,5 @@
 <div align="center">
+  ![magic_cube](https://github.com/user-attachments/assets/bcb96ac3-b5d3-4929-85ee-936f5e8f8391)
   <h1 align="center">Magic Cube Solver - Local Search</h1>
 
    <div align="center">
