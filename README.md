@@ -1,5 +1,14 @@
 <div align="center">
-  ![magic_cube](https://github.com/user-attachments/assets/bcb96ac3-b5d3-4929-85ee-936f5e8f8391)
+  <br />
+      <img src="https://github.com/user-attachments/assets/825ff5de-54c0-4a8b-9509-8f7be9fe5ec2" alt="Project Banner">
+    </a>
+  <br />
+
+  <br>
+  <div>
+    <img src="https://img.shields.io/badge/python-3670A0?style=for-the-badge&logo=python&logoColor=ffdd54" alt="Python" />
+  </div>
+  
   <h1 align="center">Magic Cube Solver - Local Search</h1>
 
    <div align="center">
