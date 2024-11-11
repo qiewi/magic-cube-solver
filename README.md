@@ -89,16 +89,13 @@ git clone https://github.com/qiewi/magic-cube-solver.git
 cd src
 ```
 
-2. Lakukan penyesuaian pada terminal
-```bash
-Open Terminal, lalu expand hingga full screen
-(disarankan menggunakan layar besar / mac os agar tampilan dapat dilihat secara penuh)
-```
-
-3. Ketik "python main.py" pada terminal
+2. Ketik "python main.py" pada terminal
 ```bash
 python main.py
 ```
+
+Open Terminal, lalu expand hingga full screen
+(disarankan menggunakan layar besar / mac os agar tampilan dapat dilihat secara penuh)
 
 Silahkan menjalankan program sesuai dengan keinginan.
 
