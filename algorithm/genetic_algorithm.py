@@ -9,15 +9,17 @@ from models.cube import Cube
 class GeneticAlgorithm:
     '''-------------------- Konstruktor Kelas --------------------'''
     def __init__(self):
-        self.best_cube = None
+        self.best_cube = Cube()
         self.best_value = float('inf')
         self.display_text = []
+        self.mutation_rate = 0.05  
     '''-------------------- Konstruktor Kelas --------------------'''
     
     '''-------------------- Inisiasi Populasi Genetik --------------------'''
     # Inisialisasi populasi
     def populate(self, population_size):
-        population = [Cube() for _ in range(population_size)]
+        population = [Cube() for _ in range(population_size-1)]
+        population.append(self.best_cube)
         return population
     '''-------------------- Inisiasi Populasi Genetik --------------------'''
 
@@ -73,9 +75,13 @@ class GeneticAlgorithm:
     # Proses Mutasi
     def mutation(self, new_population):
         # Melakukan mutasi pada populasi baru pada indeks acak
-        for i in range(len(new_population)):
-            new_population[i].cube.flat[random.randint(0, 124)] = random.randint(0, 125)
-        
+        for individual in new_population:
+            if random.random() < self.mutation_rate:
+                # Menentukan dua indeks acak
+                idx1, idx2 = random.sample(range(len(individual.cube.flat)), 2)
+                # Melakukan swap pada dua indeks tersebut
+                individual.cube.flat[idx1], individual.cube.flat[idx2] = individual.cube.flat[idx2], individual.cube.flat[idx1]
+            
         # Mengembalikan populasi baru yang telah dimutasi
         return new_population
     '''-------------------- Mutation Process --------------------'''
