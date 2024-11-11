@@ -2,7 +2,7 @@
   <h1 align="center">Magic Cube Solver - Local Search</h1>
 
    <div align="center">
-    <h2> Tugas Besar 1 IF3070 Dasar Inteligensi Artifisial - Algoritma Local Search & Magic Cube 5x5x5 </h2>
+     Tugas Besar 1 IF3070 Dasar Inteligensi Artifisial - Algoritma Local Search & Magic Cube 5x5x5
     </div>
 </div>
 
