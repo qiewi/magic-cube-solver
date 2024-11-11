@@ -6,31 +6,6 @@
     </div>
 </div>
 
-## Struktur Program
-```
- src
- │
- ├─── algorithm
- │       ├─── genetic_algorithm.py
- │       ├─── hill_climbing.py
- │       └─── simulated_annealing.py
- │           
- ├─── driver
- │       ├─── genetic-driver.py
- │       ├─── hillclimb-driver.py
- │       └─── simulated-driver.py 
- │           
- ├─── handlers
- │       └─── algorithm.py 
- │           
- ├─── models
- │       └─── cube.py 
- │
- ├─── main.py
- │
- └─── Visual.py 
-
-```
 ## 📋 <a name="table">Table of Contents</a>
 
 1. 🤖 [Introduction](#introduction)
@@ -126,3 +101,29 @@ python main.py
 ```
 
 Silahkan menjalankan program sesuai dengan keinginan.
+
+## Struktur Program
+```
+ src
+ │
+ ├─── algorithm
+ │       ├─── genetic_algorithm.py
+ │       ├─── hill_climbing.py
+ │       └─── simulated_annealing.py
+ │           
+ ├─── driver
+ │       ├─── genetic-driver.py
+ │       ├─── hillclimb-driver.py
+ │       └─── simulated-driver.py 
+ │           
+ ├─── handlers
+ │       └─── algorithm.py 
+ │           
+ ├─── models
+ │       └─── cube.py 
+ │
+ ├─── main.py
+ │
+ └─── Visual.py 
+
+```
