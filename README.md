@@ -84,8 +84,7 @@ dan lain-lainnya.
 | 18222105 - Audra Zelvania P.       | Steepest Ascent Hill Climbing  |
 |                                    | Stochastic Hill Climbing |
 | 18222118 - Rizqi Andhika P.        | Genetic Algorithm |
-|                                    | Visualisasi |
-|                                    | Main |
+|                                    | Visualisasi & Main |
 | 18222125 - Sekar Anindita N.       | Simulated Annealing |
 |                                    | Run Algorithm |
 | 18222138 - Khayla Belva A.         | Random Restart Hill Climbing |
